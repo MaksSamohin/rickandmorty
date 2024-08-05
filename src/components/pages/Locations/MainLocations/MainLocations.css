@@ -1,0 +1,15 @@
+.locations-filters {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.locations-filters #name-filter {
+    background-image: url('../../../../assets/icons/Vector.svg');
+    background-repeat: no-repeat;
+    background-position-x: 5px;
+    background-position-y: center;
+    min-width: 326px;
+    padding: 35px;
+    box-sizing: inherit;
+}
