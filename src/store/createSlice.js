@@ -58,5 +58,8 @@ const charactersSlice = createSlice({
 
 
 export const { loadMoreCharacters, setFilters } = charactersSlice.actions;
-export const selectFilers = state => state.characters.filters
+export const selectFilters = state => state.characters.filters
+export const selectCharacters = state => state.characters.characters
+export const selectStatus= state => state.characters.status
+
 export default charactersSlice.reducer;

@@ -1,24 +1,43 @@
-import Container from '@mui/material/Container';
-import logo from '../../assets/icons/logo-black1.svg'
-import { Link } from 'react-router-dom';
-import { Box } from '@mui/material';
-import './Nav.css';
+import Container from "@mui/material/Container";
+import logo from "../../assets/icons/logo-black1.svg";
+import { Link } from "react-router-dom";
+import { Box, AppBar } from "@mui/material";
+import styles from "./Nav.module.css";
+import { styled } from "@mui/material";
+
+const CustomAppBar = styled(AppBar)({
+  backgroundColor: "white",
+  fontFamily: '"Karla", sans-serif',
+  boxShadow: "0 5px 10px 5px rgba(0, 0, 0, .05)",
+  padding: "10px 0",
+  color: "black",
+});
 
 function Nav() {
-   return ( 
-            <nav className='nav'>
-                <Container>
-                    <Box className="nav__inner">
-                        <img src={logo} alt="logo" className="logo"/>
-                            <Box className="links">
-                                    <Link to='/' className='link' href="#">Charactes</Link>
-                                    <Link to='/locations' className='link' href="#">Locations</Link>
-                                    <Link to='/episodes' className='link' href="#">Episodes</Link>
-                            </Box>
-                    </Box>
-                </Container>
-            </nav>
-   )
+  const links = [
+    { path: "/", text: "Characters" },
+    { path: "/locations", text: "Locations" },
+    { path: "/episodes", text: "Episodes" },
+  ];
+
+  return (
+    <CustomAppBar className={styles.nav}>
+      <Container>
+        <Box className={styles.navInner}>
+          <img src={logo} alt="logo" className={styles.logo} />
+          <Box className={styles.links}>
+            {links.map((link) => {
+              return (
+                <Link to={link.path} className={styles.link}>
+                  {link.text}
+                </Link>
+              );
+            })}
+          </Box>
+        </Box>
+      </Container>
+    </CustomAppBar>
+  );
 }
 
 export default Nav;

@@ -1,4 +1,7 @@
-.main-picture {
+.topPanelCharacters {
+    margin-top: 70px;
+}
+.hero {
     margin: 20px auto 20px;
     display: block;
 }
@@ -11,7 +14,7 @@
 }
 
 #name {
-    background-image: url('../../../../assets/icons/Vector.svg');
+    background-image: url('../../assets/icons/Vector.svg');
     background-repeat: no-repeat;
     background-position-x: 5px;
     background-position-y: center;

@@ -2,8 +2,10 @@
     font-family: "Karla", sans-serif;
     box-shadow: 0 5px 10px 5px rgba(0, 0, 0, .05);
     padding: 10px 0;
+    position: relative;
+    background-color: white; 
 }
-.nav__inner {
+.navInner {
     display: flex;
     justify-content: space-between;
     align-items: center;
