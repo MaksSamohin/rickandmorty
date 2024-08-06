@@ -10,14 +10,38 @@ import picture from "../../assets/images/rickandmorty.png";
 import styles from "./TopPanelCharacters.module.css";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilters, selectFilters } from "../../store/createSlice";
+import {
+  setFilters,
+  selectFilters,
+  selectCharacters,
+  sortCharacters,
+} from "../../store/createSlice";
 
 function TopPanelCharacters() {
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
+  const characters = useSelector(selectCharacters);
+
   const handleChange = (name, value) => {
-    dispatch(setFilters({ [name]: value }));
+    dispatch(sortCharacters({ sortField: name, sortValue: value }));
   };
+
+  const currentSpecies = [];
+  const currentGender = [];
+  const currentStatus = [];
+  if (characters) {
+    characters.forEach((item) => {
+      if (!currentSpecies.includes(item.species)) {
+        currentSpecies.push(item.species);
+      }
+      if (!currentGender.includes(item.gender)) {
+        currentGender.push(item.gender);
+      }
+      if (!currentStatus.includes(item.status)) {
+        currentStatus.push(item.status);
+      }
+    });
+  }
 
   return (
     <Container className={styles.topPanelCharacters}>
@@ -48,7 +72,13 @@ function TopPanelCharacters() {
             }}
           >
             <MenuItem value="">Species</MenuItem>
-            <MenuItem value="Human">Human</MenuItem>
+            {currentSpecies.map((item) => {
+              return (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
         <FormControl>
@@ -63,8 +93,13 @@ function TopPanelCharacters() {
             sx={{ height: 56 }}
           >
             <MenuItem value="">Gender</MenuItem>
-            <MenuItem value="Male">Male</MenuItem>
-            <MenuItem value="Female">Female</MenuItem>
+            {currentGender.map((item) => {
+              return (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
         <FormControl>
@@ -79,8 +114,13 @@ function TopPanelCharacters() {
             sx={{ height: 56 }}
           >
             <MenuItem value="">Status</MenuItem>
-            <MenuItem value="Dead">Dead</MenuItem>
-            <MenuItem value="Alive">Alive</MenuItem>
+            {currentStatus.map((item) => {
+              return (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
       </Box>

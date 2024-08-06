@@ -28,7 +28,7 @@ function Nav() {
           <Box className={styles.links}>
             {links.map((link) => {
               return (
-                <Link to={link.path} className={styles.link}>
+                <Link key={link.text} to={link.path} className={styles.link}>
                   {link.text}
                 </Link>
               );

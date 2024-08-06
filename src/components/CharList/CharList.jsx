@@ -14,6 +14,8 @@ import {
   fetchCharacters,
   selectFilters,
   loadMoreCharacters,
+  selectPage,
+  selectCharacters,
 } from "../../store/createSlice";
 import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
 import { styled } from "@mui/material";
@@ -28,24 +30,32 @@ const CustomLoadButton = styled(Button)({
 
 function CharList() {
   const dispatch = useDispatch();
-  const { characters, status } = useSelector((state) => state.characters);
+  const { status } = useSelector((state) => state.characters);
+  const characters = useSelector(selectCharacters);
   const filters = useSelector(selectFilters);
+  const page = useSelector(selectPage);
   const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD);
 
   useEffect(() => {
     if (status === "idle" || status === "succeeded") {
-      dispatch(fetchCharacters({ filters }));
+      dispatch(fetchCharacters({ filters, page }));
     }
-  }, [filters, dispatch]);
+  }, [filters, dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
   }, [filters]);
-
   const handleLoadMore = () => {
-    setVisibleCount((prevCount) => prevCount + LOAD_MORE_COUNT);
+    const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
+
+    setVisibleCount(newVisibleCount);
+
+    if (newVisibleCount >= characters.length) {
+      dispatch(loadMoreCharacters());
+    }
   };
-  console.log("Characters:", characters);
+
+  console.log(characters);
   return (
     <Container>
       <Box className={styles.charlist}>
@@ -70,7 +80,12 @@ function CharList() {
           <Box>Данных нет</Box>
         )}
       </Box>
-      <CustomLoadButton onClick={() => handleLoadMore()}>
+      <CustomLoadButton
+        onClick={() => {
+          handleLoadMore();
+          loadMoreCharacters();
+        }}
+      >
         Load more
       </CustomLoadButton>
     </Container>
