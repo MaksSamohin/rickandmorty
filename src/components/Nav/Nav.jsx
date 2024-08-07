@@ -24,11 +24,13 @@ function Nav() {
     <CustomAppBar className={styles.nav}>
       <Container>
         <Box className={styles.navInner}>
-          <img src={logo} alt="logo" className={styles.logo} />
+          <Link to="/">
+            <img src={logo} alt="logo" className={styles.logo} />
+          </Link>
           <Box className={styles.links}>
             {links.map((link) => {
               return (
-                <Link to={link.path} className={styles.link}>
+                <Link key={link.text} to={link.path} className={styles.link}>
                   {link.text}
                 </Link>
               );

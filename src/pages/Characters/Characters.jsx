@@ -1,14 +1,14 @@
 import TopPanelCharacters from "../../components/TopPanelCharacters/TopPanelCharacters";
 import Nav from "../../components/Nav/Nav";
 import "./Characters.css";
-import CharList from "../../components/CharList/CharList";
+import CharacterList from "../../components/CharacterList/ChararacterList";
 
 function Characters() {
   return (
     <>
       <Nav />
       <TopPanelCharacters />
-      <CharList />
+      <CharacterList />
     </>
   );
 }

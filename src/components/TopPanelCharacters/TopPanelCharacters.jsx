@@ -10,14 +10,33 @@ import picture from "../../assets/images/rickandmorty.png";
 import styles from "./TopPanelCharacters.module.css";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilters, selectFilters } from "../../store/createSlice";
+import {
+  setFilters,
+  selectFilters,
+  fetchCharacters,
+  selectAvailableFilters,
+} from "../../store/createSlice";
+import { useEffect } from "react";
 
 function TopPanelCharacters() {
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
+  const availableFilters = useSelector(selectAvailableFilters);
+
+  useEffect(() => {
+    dispatch(fetchCharacters({ filters }));
+  }, [filters, dispatch]);
+
   const handleChange = (name, value) => {
-    dispatch(setFilters({ [name]: value }));
+    if (value === "") {
+      console.log("Сброс фильтров");
+    }
+    const newFilters = { ...filters, [name]: value };
+    dispatch(setFilters(newFilters));
+    localStorage.setItem("filters", JSON.stringify(newFilters));
   };
+  console.log(filters);
+  console.log(availableFilters);
 
   return (
     <Container className={styles.topPanelCharacters}>
@@ -33,56 +52,80 @@ function TopPanelCharacters() {
           placeholder="Filter by name"
           sx={{ height: 56 }}
         />
-        <FormControl>
-          <InputLabel id="select-species">Species</InputLabel>
-          <Select
-            value={filters.species}
-            onChange={(e) => handleChange("species", e.target.value)}
-            labelId="select-species"
-            id="species"
-            className={styles.filter}
-            label="Species"
-            sx={{
-              height: 56,
-              backgroundImage: "url('./assets/images/Vector.svg')",
-            }}
-          >
-            <MenuItem value="">Species</MenuItem>
-            <MenuItem value="Human">Human</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="select-genders">Gender</InputLabel>
-          <Select
-            value={filters.gender}
-            onChange={(e) => handleChange("gender", e.target.value)}
-            labelId="select-gender"
-            id="gender"
-            className={styles.filter}
-            label="Gender"
-            sx={{ height: 56 }}
-          >
-            <MenuItem value="">Gender</MenuItem>
-            <MenuItem value="Male">Male</MenuItem>
-            <MenuItem value="Female">Female</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="select-species">Status</InputLabel>
-          <Select
-            value={filters.status}
-            onChange={(e) => handleChange("status", e.target.value)}
-            labelId="select-status"
-            id="status"
-            className={styles.filter}
-            label="Status"
-            sx={{ height: 56 }}
-          >
-            <MenuItem value="">Status</MenuItem>
-            <MenuItem value="Dead">Dead</MenuItem>
-            <MenuItem value="Alive">Alive</MenuItem>
-          </Select>
-        </FormControl>
+        <Box className={styles.advancedFilters}>
+          <FormControl>
+            <InputLabel id="select-species">Species</InputLabel>
+            <Select
+              value={filters.species}
+              onChange={(e) => handleChange("species", e.target.value)}
+              labelId="select-species"
+              id="species"
+              className={styles.filter}
+              label="Species"
+              sx={{
+                height: 56,
+                backgroundImage: "url('./assets/images/Vector.svg')",
+              }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.species.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="select-genders">Gender</InputLabel>
+            <Select
+              value={filters.gender}
+              onChange={(e) => handleChange("gender", e.target.value)}
+              labelId="select-gender"
+              id="gender"
+              className={styles.filter}
+              label="Gender"
+              sx={{ height: 56 }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.gender.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="select-species">Status</InputLabel>
+            <Select
+              value={filters.status}
+              onChange={(e) => handleChange("status", e.target.value)}
+              labelId="select-status"
+              id="status"
+              className={styles.filter}
+              label="Status"
+              sx={{ height: 56 }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.status.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
     </Container>
   );

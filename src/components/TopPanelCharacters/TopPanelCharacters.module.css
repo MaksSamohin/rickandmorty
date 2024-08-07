@@ -8,6 +8,13 @@
 .filters {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+}
+.advancedFilters {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 65px;
 }
 .filter {
     min-width: 240px;
