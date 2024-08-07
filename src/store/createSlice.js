@@ -9,6 +9,7 @@ export const fetchCharacters = createAsyncThunk(
         const query = new URLSearchParams({page: currentPage, ...filters}).toString();
         const response = await fetch(`https://rickandmortyapi.com/api/character?${query}`);
         const data = await response.json();
+        console.log(query)
         return data.results;
     }
 )
@@ -21,14 +22,17 @@ const charactersSlice = createSlice({
         status: 'idle',
         page: 1,
         error: null,
-        filters: {
+        filters: JSON.parse(localStorage.getItem('filters')) || {
             name: '',
             species: '',
             gender: '',
             status: '',
         },
-        sortField: '',
-        sortValue: '',
+        availableFilters: {
+            species: [],
+            gender: [],
+            status: [],
+        },
     },
     reducers: {
         loadMoreCharacters(state) {
@@ -38,20 +42,6 @@ const charactersSlice = createSlice({
             state.filters = {...state.filters, ...action.payload}
             state.page = 1;
         },
-        sortCharacters(state, action) {
-            const { sortField, sortValue } = action.payload;
-            state.sortField = sortField;
-            state.sortValue = sortValue;
-            state.characters = state.characters.slice().sort((a, b) => {
-                if (a[sortField] === sortValue && b[sortField] !== sortValue) {
-                    return -1;
-                }
-                if (a[sortField] !== sortValue && b[sortField] === sortValue) {
-                    return 1;
-                }
-                return 0;
-            });
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -64,6 +54,24 @@ const charactersSlice = createSlice({
                 state.characters = action.payload;
             } else {
                 state.characters = [...state.characters, ...action.payload];
+            }
+
+            const newSpecies = new Set(state.availableFilters.species);
+            const newGender = new Set(state.availableFilters.gender);
+            const newStatus= new Set(state.availableFilters.status);
+
+            if (Array.isArray(action.payload)) {
+                action.payload.forEach((item) => {
+                    newSpecies.add(item.species)
+                    newGender.add(item.gender)
+                    newStatus.add(item.status)
+                })
+            }
+
+            state.availableFilters = {
+                species: Array.from(newSpecies),
+                gender: Array.from(newGender),
+                status: Array.from(newStatus),
             }
         })
         .addCase(fetchCharacters.rejected, (state, action) => {
@@ -80,6 +88,7 @@ export const selectFilters = state => state.characters.filters
 export const selectCharacters = state => state.characters.characters
 export const selectStatus= state => state.characters.status
 export const selectPage= state => state.characters.page
+export const selectAvailableFilters = state => state.characters.availableFilters
 
 
 export default charactersSlice.reducer;

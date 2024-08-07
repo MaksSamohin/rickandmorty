@@ -8,7 +8,6 @@ import {
   Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import styles from "./CharList.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCharacters,
@@ -19,6 +18,8 @@ import {
 } from "../../store/createSlice";
 import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
 import { styled } from "@mui/material";
+import { Link } from "react-router-dom";
+import styles from "./CharacterList.module.css";
 
 const CustomLoadButton = styled(Button)({
   display: "block",
@@ -28,7 +29,7 @@ const CustomLoadButton = styled(Button)({
   minWidth: "140px",
 });
 
-function CharList() {
+function CharacterList() {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.characters);
   const characters = useSelector(selectCharacters);
@@ -55,25 +56,36 @@ function CharList() {
     }
   };
 
-  console.log(characters);
   return (
     <Container>
       <Box className={styles.charlist}>
         {characters ? (
           characters.slice(0, visibleCount).map((item, index) => {
             return (
-              <Card key={item.id} className={styles.cardCharacter}>
-                <CardContent>
-                  <CardMedia
-                    component="img"
-                    image={item.image}
-                    alt={item.name}
-                    sx={{ width: "100%", height: "140px" }}
-                  />
-                  <Typography variant="h6">{item.name}</Typography>
-                  <Typography>{item.species}</Typography>
-                </CardContent>
-              </Card>
+              <Link
+                key={item.id}
+                to={`character/${item.id}`}
+                className={styles.cardLink}
+              >
+                <Card className={styles.cardCharacter}>
+                  <CardContent className={styles.cardCharacterContent}>
+                    <CardMedia
+                      component="img"
+                      image={item.image}
+                      alt={item.name}
+                      className={styles.cardCharacterImg}
+                    />
+                    <Box className={styles.cardCharacterContentText}>
+                      <Typography className={styles.cardCharacterName}>
+                        {item.name}
+                      </Typography>
+                      <Typography className={styles.cardCharacterSpecies}>
+                        {item.species}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })
         ) : (
@@ -92,4 +104,4 @@ function CharList() {
   );
 }
 
-export default CharList;
+export default CharacterList;

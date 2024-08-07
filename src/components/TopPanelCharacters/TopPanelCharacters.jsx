@@ -14,34 +14,34 @@ import {
   setFilters,
   selectFilters,
   selectCharacters,
-  sortCharacters,
+  fetchCharacters,
+  selectAvailableFilters,
 } from "../../store/createSlice";
+import { useEffect } from "react";
 
 function TopPanelCharacters() {
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
   const characters = useSelector(selectCharacters);
+  const availableFilters = useSelector(selectAvailableFilters);
+
+  useEffect(() => {
+    const savedFilters = JSON.parse(localStorage.getItem("filters"));
+    if (savedFilters) {
+      dispatch(setFilters(savedFilters));
+    }
+    console.log(savedFilters);
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCharacters({ filters }));
+  }, [filters, dispatch]);
 
   const handleChange = (name, value) => {
-    dispatch(sortCharacters({ sortField: name, sortValue: value }));
+    const newFilters = { ...filters, [name]: value };
+    dispatch(setFilters(newFilters));
+    localStorage.setItem("filters", JSON.stringify(newFilters));
   };
-
-  const currentSpecies = [];
-  const currentGender = [];
-  const currentStatus = [];
-  if (characters) {
-    characters.forEach((item) => {
-      if (!currentSpecies.includes(item.species)) {
-        currentSpecies.push(item.species);
-      }
-      if (!currentGender.includes(item.gender)) {
-        currentGender.push(item.gender);
-      }
-      if (!currentStatus.includes(item.status)) {
-        currentStatus.push(item.status);
-      }
-    });
-  }
 
   return (
     <Container className={styles.topPanelCharacters}>
@@ -57,72 +57,80 @@ function TopPanelCharacters() {
           placeholder="Filter by name"
           sx={{ height: 56 }}
         />
-        <FormControl>
-          <InputLabel id="select-species">Species</InputLabel>
-          <Select
-            value={filters.species}
-            onChange={(e) => handleChange("species", e.target.value)}
-            labelId="select-species"
-            id="species"
-            className={styles.filter}
-            label="Species"
-            sx={{
-              height: 56,
-              backgroundImage: "url('./assets/images/Vector.svg')",
-            }}
-          >
-            <MenuItem value="">Species</MenuItem>
-            {currentSpecies.map((item) => {
-              return (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="select-genders">Gender</InputLabel>
-          <Select
-            value={filters.gender}
-            onChange={(e) => handleChange("gender", e.target.value)}
-            labelId="select-gender"
-            id="gender"
-            className={styles.filter}
-            label="Gender"
-            sx={{ height: 56 }}
-          >
-            <MenuItem value="">Gender</MenuItem>
-            {currentGender.map((item) => {
-              return (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="select-species">Status</InputLabel>
-          <Select
-            value={filters.status}
-            onChange={(e) => handleChange("status", e.target.value)}
-            labelId="select-status"
-            id="status"
-            className={styles.filter}
-            label="Status"
-            sx={{ height: 56 }}
-          >
-            <MenuItem value="">Status</MenuItem>
-            {currentStatus.map((item) => {
-              return (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+        <Box className={styles.advancedFilters}>
+          <FormControl>
+            <InputLabel id="select-species">Species</InputLabel>
+            <Select
+              value={filters.species}
+              onChange={(e) => handleChange("species", e.target.value)}
+              labelId="select-species"
+              id="species"
+              className={styles.filter}
+              label="Species"
+              sx={{
+                height: 56,
+                backgroundImage: "url('./assets/images/Vector.svg')",
+              }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.species.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="select-genders">Gender</InputLabel>
+            <Select
+              value={filters.gender}
+              onChange={(e) => handleChange("gender", e.target.value)}
+              labelId="select-gender"
+              id="gender"
+              className={styles.filter}
+              label="Gender"
+              sx={{ height: 56 }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.gender.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="select-species">Status</InputLabel>
+            <Select
+              value={filters.status}
+              onChange={(e) => handleChange("status", e.target.value)}
+              labelId="select-status"
+              id="status"
+              className={styles.filter}
+              label="Status"
+              sx={{ height: 56 }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.status.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
     </Container>
   );

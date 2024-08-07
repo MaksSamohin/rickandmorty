@@ -24,7 +24,9 @@ function Nav() {
     <CustomAppBar className={styles.nav}>
       <Container>
         <Box className={styles.navInner}>
-          <img src={logo} alt="logo" className={styles.logo} />
+          <Link to="/">
+            <img src={logo} alt="logo" className={styles.logo} />
+          </Link>
           <Box className={styles.links}>
             {links.map((link) => {
               return (
