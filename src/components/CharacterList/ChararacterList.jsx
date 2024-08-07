@@ -36,12 +36,41 @@ function CharacterList() {
   const filters = useSelector(selectFilters);
   const page = useSelector(selectPage);
   const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD);
+  const [filteredCharacters, setFilteredCharacters] = useState([]);
+  const sortedCharacters = characters
+    ? characters.filter((character) => {
+        if (filters.species && character.species !== filters.species) {
+          return false;
+        }
+        if (filters.gender && character.gender !== filters.gender) {
+          return false;
+        }
+        if (filters.status && character.status !== filters.status) {
+          return false;
+        }
+        if (
+          filters.name &&
+          !character.name.toLowerCase().includes(filters.name.toLowerCase())
+        ) {
+          return false;
+        }
+        return true;
+      })
+    : "";
 
+  useEffect(() => {
+    if (sortedCharacters.length < visibleCount) {
+      console.log("Мало");
+      dispatch(loadMoreCharacters());
+    } else {
+      setFilteredCharacters(sortedCharacters);
+    }
+  }, [sortedCharacters.length]);
   useEffect(() => {
     if (status === "idle" || status === "succeeded") {
       dispatch(fetchCharacters({ filters, page }));
     }
-  }, [dispatch, page]);
+  }, [page, filters]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
@@ -50,23 +79,9 @@ function CharacterList() {
     const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
 
     setVisibleCount(newVisibleCount);
-
-    if (newVisibleCount >= characters.length) {
-      dispatch(loadMoreCharacters());
-    }
   };
-  const filteredCharacters = characters.filter((character) => {
-    if (filters.species && character.species !== filters.species) {
-      return false;
-    }
-    if (filters.gender && character.gender !== filters.gender) {
-      return false;
-    }
-    if (filters.status && character.status !== filters.status) {
-      return false;
-    }
-    return true;
-  });
+
+  console.log(filteredCharacters);
   return (
     <Container>
       <Box className={styles.charlist}>
@@ -100,7 +115,7 @@ function CharacterList() {
             );
           })
         ) : (
-          <Box>Данных нет</Box>
+          <Box>No data</Box>
         )}
       </Box>
       {characters && characters.length < INITIAL_LOAD ? (
@@ -109,7 +124,6 @@ function CharacterList() {
         <CustomLoadButton
           onClick={() => {
             handleLoadMore();
-            loadMoreCharacters();
           }}
         >
           Load more

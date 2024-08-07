@@ -17,7 +17,6 @@ function CharacterDetails() {
     };
     fetchCharacter();
   }, []);
-  console.log(character);
   return (
     <>
       <Nav />

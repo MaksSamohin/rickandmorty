@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { act } from 'react';
 
 export const fetchCharacters = createAsyncThunk(
     'characters/fetchCharacters',
-    async ({filters, page = 1}, { getState }) => {
+    async ({ page = 1}, { getState }) => {
         const state = getState();
         const currentPage = state.characters.page || page
-        const query = new URLSearchParams({page: currentPage, ...filters}).toString();
+        const query = new URLSearchParams({page: currentPage}).toString();
         const response = await fetch(`https://rickandmortyapi.com/api/character?${query}`);
         const data = await response.json();
         return data.results;
@@ -17,7 +16,6 @@ const charactersSlice = createSlice({
     name: 'characters',
     initialState: {
         characters: [],
-        filteredCharacters: [],
         status: 'idle',
         page: 1,
         error: null,
@@ -28,6 +26,7 @@ const charactersSlice = createSlice({
             status: '',
         },
         availableFilters: {
+            name: '',
             species: [],
             gender: [],
             status: [],
@@ -81,6 +80,7 @@ const charactersSlice = createSlice({
                 species: Array.from(newSpecies),
                 gender: Array.from(newGender),
                 status: Array.from(newStatus),
+                name: '',
             }
         })
         .addCase(fetchCharacters.rejected, (state, action) => {
