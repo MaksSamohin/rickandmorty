@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setFilters,
   selectFilters,
-  selectCharacters,
   fetchCharacters,
   selectAvailableFilters,
 } from "../../store/createSlice";
@@ -22,26 +21,22 @@ import { useEffect } from "react";
 function TopPanelCharacters() {
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
-  const characters = useSelector(selectCharacters);
   const availableFilters = useSelector(selectAvailableFilters);
-
-  useEffect(() => {
-    const savedFilters = JSON.parse(localStorage.getItem("filters"));
-    if (savedFilters) {
-      dispatch(setFilters(savedFilters));
-    }
-    console.log(savedFilters);
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchCharacters({ filters }));
   }, [filters, dispatch]);
 
   const handleChange = (name, value) => {
+    if (value === "") {
+      console.log("Сброс фильтров");
+    }
     const newFilters = { ...filters, [name]: value };
     dispatch(setFilters(newFilters));
     localStorage.setItem("filters", JSON.stringify(newFilters));
   };
+  console.log(filters);
+  console.log(availableFilters);
 
   return (
     <Container className={styles.topPanelCharacters}>

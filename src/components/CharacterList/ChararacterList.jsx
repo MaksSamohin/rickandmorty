@@ -41,7 +41,7 @@ function CharacterList() {
     if (status === "idle" || status === "succeeded") {
       dispatch(fetchCharacters({ filters, page }));
     }
-  }, [filters, dispatch, page]);
+  }, [dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
@@ -55,12 +55,23 @@ function CharacterList() {
       dispatch(loadMoreCharacters());
     }
   };
-
+  const filteredCharacters = characters.filter((character) => {
+    if (filters.species && character.species !== filters.species) {
+      return false;
+    }
+    if (filters.gender && character.gender !== filters.gender) {
+      return false;
+    }
+    if (filters.status && character.status !== filters.status) {
+      return false;
+    }
+    return true;
+  });
   return (
     <Container>
       <Box className={styles.charlist}>
-        {characters ? (
-          characters.slice(0, visibleCount).map((item, index) => {
+        {filteredCharacters ? (
+          filteredCharacters.slice(0, visibleCount).map((item, index) => {
             return (
               <Link
                 key={item.id}
@@ -92,14 +103,18 @@ function CharacterList() {
           <Box>Данных нет</Box>
         )}
       </Box>
-      <CustomLoadButton
-        onClick={() => {
-          handleLoadMore();
-          loadMoreCharacters();
-        }}
-      >
-        Load more
-      </CustomLoadButton>
+      {characters && characters.length < INITIAL_LOAD ? (
+        ""
+      ) : (
+        <CustomLoadButton
+          onClick={() => {
+            handleLoadMore();
+            loadMoreCharacters();
+          }}
+        >
+          Load more
+        </CustomLoadButton>
+      )}
     </Container>
   );
 }

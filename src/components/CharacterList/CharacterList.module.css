@@ -15,7 +15,7 @@
 .cardCharacter:hover {
     border: 2px solid black;
 }
-.cardCharacterContent {
+.cardCharacter .cardCharacterContent {
     padding: 0;
 }
 .cardCharacterImg {

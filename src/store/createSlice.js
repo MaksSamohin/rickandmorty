@@ -9,7 +9,6 @@ export const fetchCharacters = createAsyncThunk(
         const query = new URLSearchParams({page: currentPage, ...filters}).toString();
         const response = await fetch(`https://rickandmortyapi.com/api/character?${query}`);
         const data = await response.json();
-        console.log(query)
         return data.results;
     }
 )
@@ -56,16 +55,26 @@ const charactersSlice = createSlice({
                 state.characters = [...state.characters, ...action.payload];
             }
 
+            const currentSpecies = state.filters.species;
+            const currentGender = state.filters.gender;
+            const currentStatus = state.filters.status;
+
             const newSpecies = new Set(state.availableFilters.species);
             const newGender = new Set(state.availableFilters.gender);
-            const newStatus= new Set(state.availableFilters.status);
+            const newStatus = new Set(state.availableFilters.status);
 
             if (Array.isArray(action.payload)) {
                 action.payload.forEach((item) => {
-                    newSpecies.add(item.species)
-                    newGender.add(item.gender)
-                    newStatus.add(item.status)
-                })
+                    if (!currentSpecies || item.species === currentSpecies) {
+                        newSpecies.add(item.species);
+                    }
+                    if (!currentGender || item.gender === currentGender) {
+                        newGender.add(item.gender);
+                    }
+                    if (!currentStatus || item.status === currentStatus) {
+                        newStatus.add(item.status);
+                    }
+                });
             }
 
             state.availableFilters = {
