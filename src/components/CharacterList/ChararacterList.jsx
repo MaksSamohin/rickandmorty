@@ -36,36 +36,43 @@ function CharacterList() {
   const filters = useSelector(selectFilters);
   const page = useSelector(selectPage);
   const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD);
-  const [filteredCharacters, setFilteredCharacters] = useState([]);
-  const sortedCharacters = characters
-    ? characters.filter((character) => {
-        if (filters.species && character.species !== filters.species) {
-          return false;
-        }
-        if (filters.gender && character.gender !== filters.gender) {
-          return false;
-        }
-        if (filters.status && character.status !== filters.status) {
-          return false;
-        }
-        if (
-          filters.name &&
-          !character.name.toLowerCase().includes(filters.name.toLowerCase())
-        ) {
-          return false;
-        }
-        return true;
-      })
-    : "";
+  const [sortedCharacters, setSortedCharacters] = useState([]);
 
   useEffect(() => {
-    if (sortedCharacters.length < visibleCount) {
-      console.log("Мало");
+    const filteredCharacters = characters
+      ? characters.filter((character) => {
+          if (filters.species && character.species !== filters.species) {
+            return false;
+          }
+          if (filters.gender && character.gender !== filters.gender) {
+            return false;
+          }
+          if (filters.status && character.status !== filters.status) {
+            return false;
+          }
+          if (
+            filters.name &&
+            !character.name.toLowerCase().includes(filters.name.toLowerCase())
+          ) {
+            return false;
+          }
+          return true;
+        })
+      : [];
+
+    const uniqueCharacters = Array.from(
+      new Set(filteredCharacters.map((item) => item.id))
+    ).map((id) => {
+      return filteredCharacters.find((item) => item.id === id);
+    });
+
+    if (uniqueCharacters.length < visibleCount) {
       dispatch(loadMoreCharacters());
-    } else {
-      setFilteredCharacters(sortedCharacters);
     }
-  }, [sortedCharacters.length]);
+
+    setSortedCharacters(uniqueCharacters);
+  }, [characters, filters, dispatch]);
+
   useEffect(() => {
     if (status === "idle" || status === "succeeded") {
       dispatch(fetchCharacters({ filters, page }));
@@ -75,18 +82,21 @@ function CharacterList() {
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
   }, [filters]);
+
   const handleLoadMore = () => {
     const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
 
     setVisibleCount(newVisibleCount);
+    if (sortedCharacters.length <= visibleCount) {
+      dispatch(loadMoreCharacters());
+    }
   };
 
-  console.log(filteredCharacters);
   return (
     <Container>
       <Box className={styles.charlist}>
-        {filteredCharacters ? (
-          filteredCharacters.slice(0, visibleCount).map((item, index) => {
+        {sortedCharacters ? (
+          sortedCharacters.slice(0, visibleCount).map((item, index) => {
             return (
               <Link
                 key={item.id}

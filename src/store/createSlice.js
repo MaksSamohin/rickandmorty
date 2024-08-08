@@ -26,7 +26,6 @@ const charactersSlice = createSlice({
             status: '',
         },
         availableFilters: {
-            name: '',
             species: [],
             gender: [],
             status: [],
@@ -47,7 +46,9 @@ const charactersSlice = createSlice({
             state.status = 'loading';
         })
         .addCase(fetchCharacters.fulfilled, (state, action) => {
+
             state.status = 'succeeded';
+           
             if (state.page === 1) {
                 state.characters = action.payload;
             } else {
@@ -74,13 +75,14 @@ const charactersSlice = createSlice({
                         newStatus.add(item.status);
                     }
                 });
+            } else {
+                console.error('Received non-iterable data:', action.payload);
             }
 
             state.availableFilters = {
                 species: Array.from(newSpecies),
                 gender: Array.from(newGender),
                 status: Array.from(newStatus),
-                name: '',
             }
         })
         .addCase(fetchCharacters.rejected, (state, action) => {
