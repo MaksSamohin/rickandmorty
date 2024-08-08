@@ -64,7 +64,6 @@ const charactersSlice = createSlice({
             if (state.page === 1) {
                 state.characters = fetchedCharacters;
             } else if (state.hasMore === true) {
-                console.log(state.characters)
                 state.characters = [...state.characters, ...fetchedCharacters];
                 console.log(state.characters)
             }

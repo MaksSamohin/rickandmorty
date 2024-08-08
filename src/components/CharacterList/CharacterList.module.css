@@ -16,7 +16,7 @@
     cursor: pointer;
 }
 .cardCharacter:hover {
-    border: 2px solid black;
+    box-shadow: 0 0 5px 5px #a0a0a0c5;
 }
 .cardCharacter .cardCharacterContent {
     padding: 0;

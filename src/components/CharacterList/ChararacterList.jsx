@@ -71,8 +71,10 @@ function CharacterList() {
   }, [characters, filters]);
 
   useEffect(() => {
-    dispatch(fetchCharacters({ filters, page }));
-  }, [dispatch, page]);
+    if (filters) {
+      dispatch(fetchCharacters({ filters }));
+    }
+  }, [filters, dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
