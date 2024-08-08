@@ -40,12 +40,23 @@ const charactersSlice = createSlice({
     },
     reducers: {
         loadMoreCharacters(state) {
+            if (state.hasMore === true) {
                 state.page += 1
+            }
         },
         setFilters(state, action) {
             state.filters = {...state.filters, ...action.payload}
             state.page = 1;
         },
+        updateCharacters(state, action) {
+            if (action.payload) {
+                const newCharacters = action.payload;
+                const uniqueCharacters = newCharacters.filter(
+                    (newChar) => !state.characters.some((char) => char.id === newChar.id)
+                );
+                state.characters = state.page === 1 ? uniqueCharacters : [...state.characters, ...uniqueCharacters];
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -108,7 +119,7 @@ const charactersSlice = createSlice({
 
 
 
-export const { loadMoreCharacters, setFilters, sortCharacters } = charactersSlice.actions;
+export const { loadMoreCharacters, setFilters, sortCharacters, updateCharacters } = charactersSlice.actions;
 export const selectFilters = state => state.characters.filters
 export const selectCharacters = state => state.characters.characters
 export const selectStatus= state => state.characters.status

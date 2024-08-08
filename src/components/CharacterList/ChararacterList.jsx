@@ -15,6 +15,7 @@ import {
   loadMoreCharacters,
   selectPage,
   selectCharacters,
+  updateCharacters,
 } from "../../store/createSlice";
 import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
 import { styled } from "@mui/material";
@@ -56,25 +57,38 @@ function CharacterList() {
           return true;
         })
       : [];
+    console.log(filteredCharacters);
 
-    const uniqueCharacters = Array.from(
-      new Set(filteredCharacters.map((item) => item.id))
-    ).map((id) => {
-      return filteredCharacters.find((item) => item.id === id);
-    });
+    if (filteredCharacters && filteredCharacters.length > 0) {
+      const uniqueCharacters = Array.from(
+        new Set(filteredCharacters.map((item) => item.id))
+      ).map((id) => {
+        return filteredCharacters.find((item) => item.id === id);
+      });
+      setSortedCharacters(uniqueCharacters);
 
-    if (uniqueCharacters.length < visibleCount) {
+      if (uniqueCharacters.length < visibleCount) {
+        dispatch(fetchCharacters({ filters })).then((result) => {
+          dispatch(updateCharacters(result.payload));
+        });
+        dispatch(loadMoreCharacters());
+      }
+    } else {
+      dispatch(fetchCharacters({ filters })).then((result) => {
+        dispatch(updateCharacters(result.payload));
+      });
       dispatch(loadMoreCharacters());
-    }
+      setSortedCharacters(filteredCharacters);
 
-    setSortedCharacters(uniqueCharacters);
-  }, [characters, filters, visibleCount]);
-
-  useEffect(() => {
-    if (filters) {
-      dispatch(fetchCharacters({ filters }));
+      console.log("Нету");
     }
-  }, [filters, dispatch, page]);
+  }, [characters, filters, visibleCount, hasMore]);
+
+  // useEffect(() => {
+  //   if (filters) {
+  //     dispatch(fetchCharacters({ filters }));
+  //   }
+  // }, [filters, dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
@@ -91,6 +105,8 @@ function CharacterList() {
   };
   console.log(visibleCount);
   console.log(sortedCharacters);
+  console.log(hasMore);
+
   return (
     <Container className={styles.wrapper}>
       <Box>
@@ -133,7 +149,7 @@ function CharacterList() {
           </Box>
         )}
       </Box>
-      {status !== "loading" && hasMore && (
+      {status !== "loading" && sortedCharacters.length > 0 && hasMore && (
         <Box>
           <CustomLoadButton onClick={(e) => handleLoadMore(e)}>
             Load more
