@@ -1,5 +1,8 @@
+.wrapper {
+    padding-bottom: 70px;
+}
 .charlist {
-    padding: 20px 0;
+    padding: 20px 0 60px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;

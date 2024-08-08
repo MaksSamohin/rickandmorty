@@ -71,9 +71,7 @@ function CharacterList() {
   }, [characters, filters]);
 
   useEffect(() => {
-    if (status !== "loading") {
-      dispatch(fetchCharacters({ filters, page }));
-    }
+    dispatch(fetchCharacters({ filters, page }));
   }, [dispatch, page]);
 
   useEffect(() => {
@@ -90,7 +88,7 @@ function CharacterList() {
     }
   };
   return (
-    <Container>
+    <Container className={styles.wrapper}>
       <Box>
         {status === "loading" ? (
           <Box>
