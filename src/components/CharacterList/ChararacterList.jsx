@@ -68,13 +68,13 @@ function CharacterList() {
     }
 
     setSortedCharacters(uniqueCharacters);
-  }, [characters, filters, dispatch, hasMore]);
+  }, [characters, filters]);
 
   useEffect(() => {
-    if (status === "idle" || status === "succeeded") {
+    if (status !== "loading") {
       dispatch(fetchCharacters({ filters, page }));
     }
-  }, [page, filters, hasMore]);
+  }, [dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
