@@ -19,6 +19,7 @@ const charactersSlice = createSlice({
         status: 'idle',
         page: 1,
         error: null,
+        hasMore: true,
         filters: JSON.parse(localStorage.getItem('filters')) || {
             name: '',
             species: '',
@@ -33,7 +34,7 @@ const charactersSlice = createSlice({
     },
     reducers: {
         loadMoreCharacters(state) {
-            state.page += 1
+                state.page += 1
         },
         setFilters(state, action) {
             state.filters = {...state.filters, ...action.payload}
@@ -46,15 +47,21 @@ const charactersSlice = createSlice({
             state.status = 'loading';
         })
         .addCase(fetchCharacters.fulfilled, (state, action) => {
+            const fetchedCharacters = action.payload;
 
-            state.status = 'succeeded';
+            if (!Array.isArray(fetchedCharacters)) {
+                state.hasMore = false;
+            } else {
+                state.hasMore = true
+            }
            
             if (state.page === 1) {
-                state.characters = action.payload;
-            } else {
-                state.characters = [...state.characters, ...action.payload];
+                state.characters = fetchedCharacters;
+            } else if (state.hasMore === true) {
+                console.log(state.characters)
+                state.characters = [...state.characters, ...fetchedCharacters];
+                console.log(state.characters)
             }
-
             const currentSpecies = state.filters.species;
             const currentGender = state.filters.gender;
             const currentStatus = state.filters.status;
@@ -84,6 +91,9 @@ const charactersSlice = createSlice({
                 gender: Array.from(newGender),
                 status: Array.from(newStatus),
             }
+
+            state.status = 'succeeded';
+
         })
         .addCase(fetchCharacters.rejected, (state, action) => {
             state.status = 'failed';

@@ -6,6 +6,7 @@ import {
   Typography,
   Box,
   Button,
+  Image,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +21,7 @@ import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import styles from "./CharacterList.module.css";
+import loading from "../../assets/images/Loading.png";
 
 const CustomLoadButton = styled(Button)({
   display: "block",
@@ -31,7 +33,7 @@ const CustomLoadButton = styled(Button)({
 
 function CharacterList() {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.characters);
+  const { status, hasMore } = useSelector((state) => state.characters);
   const characters = useSelector(selectCharacters);
   const filters = useSelector(selectFilters);
   const page = useSelector(selectPage);
@@ -41,21 +43,17 @@ function CharacterList() {
   useEffect(() => {
     const filteredCharacters = characters
       ? characters.filter((character) => {
-          if (filters.species && character.species !== filters.species) {
+          if (filters.species && character.species !== filters.species)
             return false;
-          }
-          if (filters.gender && character.gender !== filters.gender) {
+          if (filters.gender && character.gender !== filters.gender)
             return false;
-          }
-          if (filters.status && character.status !== filters.status) {
+          if (filters.status && character.status !== filters.status)
             return false;
-          }
           if (
             filters.name &&
             !character.name.toLowerCase().includes(filters.name.toLowerCase())
-          ) {
+          )
             return false;
-          }
           return true;
         })
       : [];
@@ -71,19 +69,20 @@ function CharacterList() {
     }
 
     setSortedCharacters(uniqueCharacters);
-  }, [characters, filters, dispatch]);
+  }, [characters, filters, dispatch, hasMore]);
 
   useEffect(() => {
     if (status === "idle" || status === "succeeded") {
       dispatch(fetchCharacters({ filters, page }));
     }
-  }, [page, filters]);
+  }, [page, filters, hasMore]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
   }, [filters]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = (e) => {
+    e.preventDefault();
     const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
 
     setVisibleCount(newVisibleCount);
@@ -91,53 +90,54 @@ function CharacterList() {
       dispatch(loadMoreCharacters());
     }
   };
-
   return (
     <Container>
-      <Box className={styles.charlist}>
-        {sortedCharacters ? (
-          sortedCharacters.slice(0, visibleCount).map((item, index) => {
-            return (
-              <Link
-                key={item.id}
-                to={`character/${item.id}`}
-                className={styles.cardLink}
-              >
-                <Card className={styles.cardCharacter}>
-                  <CardContent className={styles.cardCharacterContent}>
-                    <CardMedia
-                      component="img"
-                      image={item.image}
-                      alt={item.name}
-                      className={styles.cardCharacterImg}
-                    />
-                    <Box className={styles.cardCharacterContentText}>
-                      <Typography className={styles.cardCharacterName}>
-                        {item.name}
-                      </Typography>
-                      <Typography className={styles.cardCharacterSpecies}>
-                        {item.species}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })
+      <Box>
+        {status === "loading" ? (
+          <Box>
+            <img src={loading} alt="" className={styles.loadingImg} />
+          </Box>
         ) : (
-          <Box>No data</Box>
+          <Box className={styles.charlist}>
+            {sortedCharacters.length > 0 ? (
+              sortedCharacters.slice(0, visibleCount).map((item) => (
+                <Link
+                  key={item.id}
+                  to={`character/${item.id}`}
+                  className={styles.cardLink}
+                >
+                  <Card className={styles.cardCharacter}>
+                    <CardContent className={styles.cardCharacterContent}>
+                      <CardMedia
+                        component="img"
+                        image={item.image}
+                        alt={item.name}
+                        className={styles.cardCharacterImg}
+                      />
+                      <Box className={styles.cardCharacterContentText}>
+                        <Typography className={styles.cardCharacterName}>
+                          {item.name}
+                        </Typography>
+                        <Typography className={styles.cardCharacterSpecies}>
+                          {item.species}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))
+            ) : (
+              <Box>No data</Box>
+            )}
+          </Box>
         )}
       </Box>
-      {characters && characters.length < INITIAL_LOAD ? (
-        ""
-      ) : (
-        <CustomLoadButton
-          onClick={() => {
-            handleLoadMore();
-          }}
-        >
-          Load more
-        </CustomLoadButton>
+      {status !== "loading" && hasMore && (
+        <Box>
+          <CustomLoadButton onClick={(e) => handleLoadMore(e)}>
+            Load more
+          </CustomLoadButton>
+        </Box>
       )}
     </Container>
   );
