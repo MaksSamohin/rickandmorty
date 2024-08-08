@@ -6,7 +6,6 @@ import {
   Typography,
   Box,
   Button,
-  Image,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
