@@ -65,7 +65,6 @@ const charactersSlice = createSlice({
                 state.characters = fetchedCharacters;
             } else if (state.hasMore === true) {
                 state.characters = [...state.characters, ...fetchedCharacters];
-                console.log(state.characters)
             }
             const currentSpecies = state.filters.species;
             const currentGender = state.filters.gender;

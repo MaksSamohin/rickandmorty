@@ -68,7 +68,7 @@ function CharacterList() {
     }
 
     setSortedCharacters(uniqueCharacters);
-  }, [characters, filters]);
+  }, [characters, filters, visibleCount]);
 
   useEffect(() => {
     if (filters) {
@@ -89,6 +89,8 @@ function CharacterList() {
       dispatch(loadMoreCharacters());
     }
   };
+  console.log(visibleCount);
+  console.log(sortedCharacters);
   return (
     <Container className={styles.wrapper}>
       <Box>
