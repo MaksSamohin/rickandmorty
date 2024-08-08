@@ -11,7 +11,13 @@ export const fetchCharacters = createAsyncThunk(
         return data.results;
     }
 )
-
+export const fetchCharacter = async (id) => {
+    const response = await fetch(
+      `https://rickandmortyapi.com/api/character/${id}`
+    );
+    const data = await response.json();
+    return data;
+}
 const charactersSlice = createSlice({
     name: 'characters',
     initialState: {
