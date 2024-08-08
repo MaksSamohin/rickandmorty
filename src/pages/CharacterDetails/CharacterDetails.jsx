@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
-import Nav from "../Nav/Nav";
+import Nav from "../../components/Nav/Nav";
 import { useParams } from "react-router-dom";
 import styles from "./CharacterDetails.module.css";
+import { useSelector } from "react-redux";
+import { fetchCharacter, selectCharacters } from "../../store/createSlice";
 function CharacterDetails() {
-  const { id } = useParams();
   const [character, setCharacter] = useState("");
+  const characters = useSelector(selectCharacters);
+  const { id } = useParams();
 
   useEffect(() => {
-    const fetchCharacter = async () => {
-      const response = await fetch(
-        `https://rickandmortyapi.com/api/character/${id}`
-      );
-      const data = await response.json();
-      setCharacter(data);
-    };
-    fetchCharacter();
-  }, []);
-  console.log(character);
+    const foundCharacter = characters.find((char) => char.id === +id);
+    if (foundCharacter) {
+      setCharacter(foundCharacter);
+    } else {
+      fetchCharacter(id).then((data) => setCharacter(data));
+    }
+  }, [characters]);
   return (
     <>
       <Nav />

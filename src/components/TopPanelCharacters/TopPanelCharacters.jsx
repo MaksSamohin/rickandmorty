@@ -28,15 +28,10 @@ function TopPanelCharacters() {
   }, [filters, dispatch]);
 
   const handleChange = (name, value) => {
-    if (value === "") {
-      console.log("Сброс фильтров");
-    }
     const newFilters = { ...filters, [name]: value };
     dispatch(setFilters(newFilters));
     localStorage.setItem("filters", JSON.stringify(newFilters));
   };
-  console.log(filters);
-  console.log(availableFilters);
 
   return (
     <Container className={styles.topPanelCharacters}>
