@@ -82,15 +82,6 @@ function CharacterList() {
 
       const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
       setVisibleCount(newVisibleCount);
-
-      if (sortedCharacters.length <= visibleCount && hasMore) {
-        dispatch(fetchCharacters({ page: page + 1, filters })).then(
-          (result) => {
-            dispatch(updateCharacters(result.payload));
-          }
-        );
-        dispatch(loadMoreCharacters());
-      }
     },
     [dispatch, sortedCharacters, visibleCount, hasMore, filters, page]
   );

@@ -42,7 +42,7 @@ export const fetchCharacter = async (id) => {
 const initialState = {
   characters: [],
   status: "idle",
-  page: 1,
+  page: 0,
   maxPage: 0,
   error: null,
   hasMore: true,
@@ -136,6 +136,7 @@ const charactersSlice = createSlice({
         );
 
         state.characters = [...state.characters, ...uniqueCharacters];
+        
         state.hasMore =
           !!action.payload.info.next && state.page < state.maxPage;
         state.maxPage = action.payload.info.pages;
