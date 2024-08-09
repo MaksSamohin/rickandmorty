@@ -60,7 +60,6 @@ function TopPanelLocations() {
             label="Type"
             sx={{
               height: 56,
-              backgroundImage: "url('./assets/images/Vector.svg')",
             }}
           >
             <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>

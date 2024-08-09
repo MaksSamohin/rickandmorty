@@ -22,6 +22,7 @@ function TopPanelCharacters() {
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
   const availableFilters = useSelector(selectAvailableFilters);
+  console.log(availableFilters);
 
   useEffect(() => {
     if (filters) {
@@ -34,7 +35,6 @@ function TopPanelCharacters() {
     dispatch(setFilters(newFilters));
     localStorage.setItem("charactersFilters", JSON.stringify(newFilters));
   };
-
   return (
     <Container className={styles.topPanelCharacters}>
       <img src={picture} alt="" className={styles.hero} />

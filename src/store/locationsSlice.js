@@ -27,10 +27,12 @@ export const fetchLocations = createAsyncThunk(
     }
   );
   
-  export const fetchLocation = async (id) => {
-    const response = await fetch(
-      `https://rickandmortyapi.com/api/location/${id}`
-    );
+  export const fetchLocation = createAsyncThunk(
+    "locations/fetchLocation",
+    async (id) => {
+      const response = await fetch(
+        `https://rickandmortyapi.com/api/location/${id}`
+      );
   
     if (!response.ok) {
       throw new Error("Response error");
@@ -38,7 +40,8 @@ export const fetchLocations = createAsyncThunk(
   
     const data = await response.json();
     return data;
-  };
+  }
+)
   
   const initialState = {
     locations: [],
@@ -140,10 +143,11 @@ export const fetchLocations = createAsyncThunk(
             state.status = "failed";
             state.loadingLocations = false;
             state.error = action.error.message;
+  console.log(action.error.message)
+
           });
       },
   });
-
 export const { loadMoreLocations, setFilters, updateLocations } = locationsSlice.actions;
 export const selectFilters = (state) => state.locations.filters;
 export const selectLocations = (state) => state.locations.locations;
