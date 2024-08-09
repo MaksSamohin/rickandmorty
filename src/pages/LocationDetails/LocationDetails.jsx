@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectLocations,
   fetchLocation,
@@ -25,6 +25,7 @@ import { selectCharacters } from "../../store/charactersSlice";
 function LocationDetails() {
   const navigate = useNavigate();
   const locations = useSelector(selectLocations);
+  const dispatch = useDispatch();
   const characters = useSelector(selectCharacters);
   const status = useSelector(selectStatus);
   const { id } = useParams();
@@ -40,15 +41,19 @@ function LocationDetails() {
     if (foundLocation) {
       setLocation(foundLocation);
     } else {
-      fetchLocation(id).then((data) => setLocation(data));
+      dispatch(fetchLocation(id))
+        .unwrap()
+        .then((data) => {
+          setLocation(data);
+        });
     }
   }, [locations]);
   useEffect(() => {
     if (location && location.residents) {
       const fetchAllResidents = async () => {
-        const residentDataPromises = location.residents.map((url) =>
-          fetch(url).then((response) => response.json())
-        );
+        const residentDataPromises = location.residents.map((url) => {
+          return fetch(url).then((response) => response.json());
+        });
         const residentData = await Promise.all(residentDataPromises);
         setResidents(residentData);
       };

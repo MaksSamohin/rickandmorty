@@ -5,12 +5,13 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import styles from "./CharacterDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import grayArrow from "../../assets/icons/grayArrow.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchCharacter, selectCharacters } from "../../store/charactersSlice";
 import Footer from "../../components/Footer/Footer";
 function CharacterDetails() {
   const [character, setCharacter] = useState("");
   const [episodes, setEpisodes] = useState("");
+  const dispatch = useDispatch();
   const characters = useSelector(selectCharacters);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -25,7 +26,11 @@ function CharacterDetails() {
     if (foundCharacter) {
       setCharacter(foundCharacter);
     } else {
-      fetchCharacter(id).then((data) => setCharacter(data));
+      dispatch(fetchCharacter(id))
+        .unwrap()
+        .then((data) => {
+          setCharacter(data);
+        });
     }
   }, [characters]);
   useEffect(() => {

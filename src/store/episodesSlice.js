@@ -29,18 +29,21 @@ export const fetchEpisodes = createAsyncThunk(
     }
   );
 
-  export const fetchEpisode = async (id) => {
-    const response = await fetch(
-      `https://rickandmortyapi.com/api/episode/${id}`
-    );
-  
-    if (!response.ok) {
-      throw new Error("Response error");
-    }
-  
-    const data = await response.json();
-    return data;
-  };
+  export const fetchEpisode = createAsyncThunk (
+    'episodes/fetchEpisode',
+    async(id) => {
+        const response = await fetch(
+            `https://rickandmortyapi.com/api/episode/${id}`
+          );
+      
+        if (!response.ok) {
+          throw new Error("Response error");
+        }
+      
+        const data = await response.json();
+        return data;
+      }
+  )
   
   const initialState = {
     episodes: [],

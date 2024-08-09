@@ -1,11 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import {
-  selectEpisodes,
-  fetchEpisode,
-  selectStatus,
-} from "../../store/episodesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectEpisodes, fetchEpisode } from "../../store/episodesSlice";
 import Footer from "../../components/Footer/Footer";
 import Nav from "../../components/Nav/Nav";
 import {
@@ -20,13 +16,11 @@ import {
 import styles from "./EpisodeDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import { Link } from "react-router-dom";
-import { selectCharacters } from "../../store/charactersSlice";
 
 function EpisodeDetails() {
   const navigate = useNavigate();
   const episodes = useSelector(selectEpisodes);
-  const characters = useSelector(selectCharacters);
-  const status = useSelector(selectStatus);
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [episode, setEpisode] = useState("");
   const [cast, setCast] = useState([]);
@@ -40,7 +34,11 @@ function EpisodeDetails() {
     if (foundEpisode) {
       setEpisode(foundEpisode);
     } else {
-      fetchEpisode(id).then((data) => setEpisode(data));
+      dispatch(fetchEpisode(id))
+        .unwrap()
+        .then((data) => {
+          setEpisode(data);
+        });
     }
   }, [episodes]);
   useEffect(() => {
@@ -125,7 +123,7 @@ function EpisodeDetails() {
                   </Link>
                 ))
               ) : (
-                <Typography>No residents found</Typography>
+                <Typography>No cast</Typography>
               )}
             </Box>
           </Box>

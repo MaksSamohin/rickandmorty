@@ -26,10 +26,12 @@ export const fetchCharacters = createAsyncThunk(
   }
 );
 
-export const fetchCharacter = async (id) => {
-  const response = await fetch(
-    `https://rickandmortyapi.com/api/character/${id}`
-  );
+export const fetchCharacter = createAsyncThunk(
+  "characters/fetchCharacter",
+  async (id) => {
+    const response = await fetch(
+      `https://rickandmortyapi.com/api/character/${id}`
+    );
 
   if (!response.ok) {
     throw new Error("Response error");
@@ -37,7 +39,8 @@ export const fetchCharacter = async (id) => {
 
   const data = await response.json();
   return data;
-};
+}
+)
 
 const initialState = {
   characters: [],
