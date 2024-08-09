@@ -6,7 +6,7 @@ import styles from "./CharacterDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import grayArrow from "../../assets/icons/grayArrow.svg";
 import { useSelector } from "react-redux";
-import { fetchCharacter, selectCharacters } from "../../store/createSlice";
+import { fetchCharacter, selectCharacters } from "../../store/charactersSlice";
 import Footer from "../../components/Footer/Footer";
 function CharacterDetails() {
   const [character, setCharacter] = useState("");

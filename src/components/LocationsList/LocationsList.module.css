@@ -1,0 +1,53 @@
+.wrapper {
+    padding-bottom: 70px;
+}
+.loclist {
+    padding: 20px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+.cardLink {
+    text-decoration: none;
+}
+.cardLocation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 240px;
+    height: 128px;
+    cursor: pointer;
+}
+.cardLocation:hover {
+    box-shadow: 0 0 5px 5px #a0a0a0c5;
+}
+
+.cardLocationImg {
+    width: 100%;
+    height: 160px;
+}
+.cardLocationContentText {
+    padding: 10px;
+    
+}
+.cardLocationContentText .cardLocationName {
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: inherit;
+}
+.loadingImg {
+    display: block;
+    margin: 0 auto;
+    animation: loading 5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
