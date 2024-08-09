@@ -16,7 +16,9 @@ function CharacterDetails() {
   const handleGoBack = () => {
     navigate(-1);
   };
-
+  const locationId = character.location
+    ? character.location.url.split("/").pop()
+    : "";
   useEffect(() => {
     const foundCharacter = characters.find((char) => char.id === +id);
     if (foundCharacter) {
@@ -25,7 +27,7 @@ function CharacterDetails() {
       fetchCharacter(id).then((data) => setCharacter(data));
     }
   }, [characters]);
-  console.log(character);
+  console.log(character.location);
   return (
     <>
       <Nav />
@@ -95,7 +97,7 @@ function CharacterDetails() {
                 </Box>
                 <Box className={styles.characterInfoInformationsColumnItem}>
                   <Typography
-                    className={styles.characterInfoInformationsItemitle}
+                    className={styles.characterInfoInformationsItemTitle}
                   >
                     Type
                   </Typography>
@@ -106,11 +108,14 @@ function CharacterDetails() {
                   </Typography>
                 </Box>
                 <Box className={styles.characterInfoInformationsColumnItem}>
-                  <Link to="/">
+                  <Link
+                    to={`/location/${locationId}`}
+                    className={styles.locationLink}
+                  >
                     <Typography
                       className={styles.characterInfoInformationsItemTitle}
                     >
-                      Type
+                      Location
                     </Typography>
                     <Typography
                       className={styles.characterInfoInformationsItemText}
