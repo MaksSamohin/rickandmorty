@@ -1,0 +1,60 @@
+.wrapper {
+    padding-bottom: 70px;
+}
+.eplist {
+    padding: 20px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+.cardLink {
+    text-decoration: none;
+}
+.cardEpisode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 240px;
+    min-height: 128px;
+    cursor: pointer;
+}
+.cardEpisode:hover {
+    box-shadow: 0 0 5px 5px #a0a0a0c5;
+}
+
+.cardEpisodeContentText {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.cardEpisodeContentText .cardEpisodeName {
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: inherit;
+}
+.cardEpisodeContentText .cardEpisodeAirdate {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+.cardEpisodeContentText .cardEpisodeNumber {
+    font-weight: 700;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+.loadingImg {
+    display: block;
+    margin: 0 auto;
+    animation: loading 5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

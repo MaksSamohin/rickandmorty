@@ -136,11 +136,11 @@ const charactersSlice = createSlice({
         );
 
         state.characters = [...state.characters, ...uniqueCharacters];
-        
+
         state.hasMore =
           !!action.payload.info.next && state.page < state.maxPage;
         state.maxPage = action.payload.info.pages;
-
+        
         state.status = "succeeded";
       })
 

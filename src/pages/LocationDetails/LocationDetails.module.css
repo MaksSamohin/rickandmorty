@@ -33,6 +33,7 @@
     display: flex;
     justify-content: space-between;
     gap: 30px;
+    margin-bottom: 50px;
 }
 .locationInfoType, .locationInfoDimension {
     width: 50%;
@@ -50,6 +51,10 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 30px;
+}
+.locationResidents .locationResidentsTitle {
+    color: rgba(142, 142, 147, 1);
+    font-size: 24px;
 }
 .locationResidents .cardLink {
     text-decoration: none;
