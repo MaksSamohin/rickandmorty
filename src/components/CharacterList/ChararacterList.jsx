@@ -7,7 +7,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCharacters,
@@ -16,6 +16,7 @@ import {
   selectPage,
   selectCharacters,
   updateCharacters,
+  charactersLoading,
 } from "../../store/createSlice";
 import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
 import { styled } from "@mui/material";
@@ -35,82 +36,71 @@ function CharacterList() {
   const dispatch = useDispatch();
   const { status, hasMore } = useSelector((state) => state.characters);
   const characters = useSelector(selectCharacters);
+  const loadingChars = useSelector(charactersLoading);
   const filters = useSelector(selectFilters);
   const page = useSelector(selectPage);
   const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD);
   const [sortedCharacters, setSortedCharacters] = useState([]);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    const filteredCharacters = characters
-      ? characters.filter((character) => {
-          if (filters.species && character.species !== filters.species)
-            return false;
-          if (filters.gender && character.gender !== filters.gender)
-            return false;
-          if (filters.status && character.status !== filters.status)
-            return false;
-          if (
-            filters.name &&
-            !character.name.toLowerCase().includes(filters.name.toLowerCase())
-          )
-            return false;
-          return true;
-        })
-      : [];
-    console.log(filteredCharacters);
+    const filteredCharacters = characters.filter((character) => {
+      if (filters.species && character.species !== filters.species)
+        return false;
+      if (filters.gender && character.gender !== filters.gender) return false;
+      if (filters.status && character.status !== filters.status) return false;
+      if (
+        filters.name &&
+        !character.name.toLowerCase().includes(filters.name.toLowerCase())
+      )
+        return false;
+      return true;
+    });
 
-    if (filteredCharacters && filteredCharacters.length > 0) {
-      const uniqueCharacters = Array.from(
-        new Set(filteredCharacters.map((item) => item.id))
-      ).map((id) => {
-        return filteredCharacters.find((item) => item.id === id);
-      });
-      setSortedCharacters(uniqueCharacters);
+    const uniqueCharacters = Array.from(
+      new Set(filteredCharacters.map((item) => item.id))
+    ).map((id) => filteredCharacters.find((item) => item.id === id));
 
-      if (uniqueCharacters.length < visibleCount) {
-        dispatch(fetchCharacters({ filters })).then((result) => {
-          dispatch(updateCharacters(result.payload));
-        });
-        dispatch(loadMoreCharacters());
-      }
-    } else {
-      dispatch(fetchCharacters({ filters })).then((result) => {
+    setSortedCharacters(uniqueCharacters);
+
+    if (uniqueCharacters.length < visibleCount && hasMore) {
+      dispatch(fetchCharacters({ page, filters })).then((result) => {
         dispatch(updateCharacters(result.payload));
+        dispatch(loadMoreCharacters());
       });
-      dispatch(loadMoreCharacters());
-      setSortedCharacters(filteredCharacters);
-
-      console.log("Нету");
     }
-  }, [characters, filters, visibleCount, hasMore]);
-
-  // useEffect(() => {
-  //   if (filters) {
-  //     dispatch(fetchCharacters({ filters }));
-  //   }
-  // }, [filters, dispatch, page]);
+  }, [characters, filters, visibleCount, hasMore, dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(INITIAL_LOAD);
   }, [filters]);
 
-  const handleLoadMore = (e) => {
-    e.preventDefault();
-    const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
+  const handleLoadMore = useCallback(
+    (e) => {
+      e.preventDefault();
+      scrollRef.current = window.scrollY;
 
-    setVisibleCount(newVisibleCount);
-    if (sortedCharacters.length <= visibleCount) {
-      dispatch(loadMoreCharacters());
-    }
-  };
-  console.log(visibleCount);
-  console.log(sortedCharacters);
+      const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
+      setVisibleCount(newVisibleCount);
+
+      if (sortedCharacters.length <= visibleCount && hasMore) {
+        dispatch(fetchCharacters({ page: page + 1, filters })).then(
+          (result) => {
+            dispatch(updateCharacters(result.payload));
+          }
+        );
+        dispatch(loadMoreCharacters());
+      }
+    },
+    [dispatch, sortedCharacters, visibleCount, hasMore, filters, page]
+  );
+
+  window.scrollTo({ top: scrollRef.current, behavior: "smooth" });
   console.log(hasMore);
-
   return (
     <Container className={styles.wrapper}>
       <Box>
-        {status === "loading" ? (
+        {loadingChars ? (
           <Box>
             <img src={loading} alt="" className={styles.loadingImg} />
           </Box>
@@ -149,13 +139,15 @@ function CharacterList() {
           </Box>
         )}
       </Box>
-      {status !== "loading" && sortedCharacters.length > 0 && hasMore && (
-        <Box>
-          <CustomLoadButton onClick={(e) => handleLoadMore(e)}>
-            Load more
-          </CustomLoadButton>
-        </Box>
-      )}
+      {status !== "loading" &&
+        sortedCharacters.length > 0 &&
+        (hasMore || visibleCount < sortedCharacters.length) && (
+          <Box>
+            <CustomLoadButton onClick={handleLoadMore}>
+              Load more
+            </CustomLoadButton>
+          </Box>
+        )}
     </Container>
   );
 }
