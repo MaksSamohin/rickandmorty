@@ -26,8 +26,6 @@ function LocationDetails() {
   const navigate = useNavigate();
   const locations = useSelector(selectLocations);
   const dispatch = useDispatch();
-  const characters = useSelector(selectCharacters);
-  const status = useSelector(selectStatus);
   const { id } = useParams();
   const [location, setLocation] = useState("");
   const [residents, setResidents] = useState([]);

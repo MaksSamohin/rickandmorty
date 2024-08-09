@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardMedia,
   Container,
   Typography,
   Box,

@@ -70,6 +70,10 @@
 .locationLink {
     text-decoration: none;
     color: inherit;
+    transition: 0.3s;
+}
+.locationLink:hover {
+    background-color: rgba(241, 241, 241, 0.705);
 }
 .locationArrowLink {
     position: absolute;
@@ -87,6 +91,7 @@
     position: relative;
     text-decoration: none;
     color: inherit;
+    transition: 0.3s;
 }
 .characterLine {
     min-width: 340px;
@@ -114,4 +119,8 @@
     letter-spacing: 0.1rem;
     color: rgba(142, 142, 147, 1);
     font-size: 10px;
+}
+
+.characterInfoEpisodesLink:hover {
+    background-color: rgba(241, 241, 241, 0.705);
 }

@@ -45,7 +45,7 @@ function CharacterDetails() {
       fetchAllEpisodes();
     }
   }, [character]);
-  console.log(episodes);
+
   return (
     <>
       <Nav />
