@@ -10,6 +10,7 @@ import { fetchCharacter, selectCharacters } from "../../store/charactersSlice";
 import Footer from "../../components/Footer/Footer";
 function CharacterDetails() {
   const [character, setCharacter] = useState("");
+  const [episodes, setEpisodes] = useState("");
   const characters = useSelector(selectCharacters);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -27,7 +28,19 @@ function CharacterDetails() {
       fetchCharacter(id).then((data) => setCharacter(data));
     }
   }, [characters]);
-  console.log(character.location);
+  useEffect(() => {
+    if (character && character.episode) {
+      const fetchAllEpisodes = async () => {
+        const episodesDataPromises = character.episode.map((url) =>
+          fetch(url).then((response) => response.json())
+        );
+        const episodeData = await Promise.all(episodesDataPromises);
+        setEpisodes(episodeData);
+      };
+      fetchAllEpisodes();
+    }
+  }, [character]);
+  console.log(episodes);
   return (
     <>
       <Nav />
@@ -122,7 +135,11 @@ function CharacterDetails() {
                     >
                       {character.location ? character.location.name : "Unknown"}
                     </Typography>
-                    <img src={grayArrow} alt="" />
+                    <img
+                      src={grayArrow}
+                      alt="arrow"
+                      className={styles.locationArrowLink}
+                    />
                   </Link>
                 </Box>
               </Box>
@@ -132,11 +149,42 @@ function CharacterDetails() {
                 Episodes
               </Typography>
               <Box className={styles.characterInfoEpisodesList}>
-                {/* {character.episode
-                ? character.episode.map((item, index) => {
-                    return <Typography>{index}</Typography>;
-                  })
-                : "No episodes"} */}
+                {episodes
+                  ? episodes.map((item) => {
+                      return (
+                        <>
+                          <Link
+                            to={`/episode/${item.id}`}
+                            className={styles.characterInfoEpisodesLink}
+                          >
+                            <Box className={styles.characterEpisode}>
+                              <Typography
+                                className={styles.characterEpisodeNumber}
+                              >
+                                {item.episode}
+                              </Typography>
+                              <Typography
+                                className={styles.characterEpisodeName}
+                              >
+                                {item.name}
+                              </Typography>
+                              <Typography
+                                className={styles.characterEpisodeAirdate}
+                              >
+                                {item.air_date}
+                              </Typography>
+                              <img
+                                src={grayArrow}
+                                alt="arrow"
+                                className={styles.episodeArrowLink}
+                              />
+                            </Box>
+                          </Link>
+                          <hr className={styles.characterLine}></hr>
+                        </>
+                      );
+                    })
+                  : "No episodes"}
               </Box>
             </Box>
           </Box>
