@@ -1,0 +1,84 @@
+.detailsTop {
+    margin-top: 120px;
+    position: relative;
+}
+.detailsTop .detailsBackButton {
+    position: absolute;
+    display: flex;
+    gap: 10px;
+    text-transform: uppercase;
+    left: 0;
+    color: inherit;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+
+.detailsTop .episodeWrapper {
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+}
+.episodeWrapper .episodeName {
+    font-size: 36px;
+}
+
+.episodeInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.episodeInfoBox {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+.episodeInfoType, .episodeInfoDimension {
+    width: 50%;
+}
+.episodeInfoType .episodeInfoTypeTitle, .episodeInfoDimension .episodeInfoDimensionTitle {
+    font-weight: 700;
+}
+.episodeInfoType .episodeInfoTypeText, .episodeInfoDimension .episodeInfoDimensionText {
+    color: rgba(110, 121, 140, 1);
+}
+
+.episodeResidents .episodeResidentsList {
+    padding: 20px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+.episodeResidents .episodeResidentsTitle {
+    color: rgba(142, 142, 147, 1);
+    font-size: 24px;
+}
+.episodeResidents .cardLink {
+    text-decoration: none;
+}
+.episodeResidentsList .cardCharacter {
+    width: 240px;
+    cursor: pointer;
+}
+.cardCharacter:hover {
+    box-shadow: 0 0 5px 5px #a0a0a0c5;
+}
+.cardCharacter .cardCharacterContent {
+    padding: 0;
+}
+.cardCharacterImg {
+    width: 100%;
+    height: 160px;
+}
+.cardCharacterContentText {
+    padding: 10px;
+    
+}
+.cardCharacterContentText .cardCharacterName {
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: inherit;
+}
