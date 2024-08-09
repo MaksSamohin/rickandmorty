@@ -43,7 +43,7 @@ export const fetchLocations = createAsyncThunk(
   const initialState = {
     locations: [],
     status: "idle",
-    page: 1,
+    page: 0,
     maxPage: 0,
     error: null,
     hasMore: true,

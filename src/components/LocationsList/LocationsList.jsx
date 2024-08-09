@@ -81,13 +81,6 @@ function LocationsList() {
 
       const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
       setVisibleCount(newVisibleCount);
-
-      if (sortedLocations.length <= visibleCount && hasMore) {
-        dispatch(fetchLocations({ page: page + 1, filters })).then((result) => {
-          dispatch(updateLocations(result.payload));
-        });
-        dispatch(loadMoreLocations());
-      }
     },
     [dispatch, sortedLocations, visibleCount, hasMore, filters, page]
   );
