@@ -47,7 +47,7 @@ const initialState = {
   error: null,
   hasMore: true,
   loadingCharacters: false,
-  filters: JSON.parse(localStorage.getItem("filters")) || {
+  filters: JSON.parse(localStorage.getItem("charactersFilters")) || {
     name: "",
     species: "",
     gender: "",
@@ -65,8 +65,6 @@ const charactersSlice = createSlice({
   initialState,
   reducers: {
     loadMoreCharacters(state) {
-      console.log(state.page);
-      console.log(state.maxPage);
       if (state.hasMore === true && state.page < state.maxPage) {
         state.page += 1;
       } else {
@@ -98,12 +96,11 @@ const charactersSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchCharacters.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.loadingCharacters = false;
         state.error = null;
-        console.log(action.payload.info.pages);
+
         const fetchedCharacters = action.payload.results;
-        console.log(fetchedCharacters);
+
         const currentSpecies = state.filters.species;
         const currentGender = state.filters.gender;
         const currentStatus = state.filters.status;
@@ -141,9 +138,11 @@ const charactersSlice = createSlice({
         state.characters = [...state.characters, ...uniqueCharacters];
         state.hasMore =
           !!action.payload.info.next && state.page < state.maxPage;
-        console.log(action.payload);
         state.maxPage = action.payload.info.pages;
+
+        state.status = "succeeded";
       })
+
       .addCase(fetchCharacters.rejected, (state, action) => {
         state.status = "failed";
         state.loadingCharacters = false;

@@ -17,11 +17,11 @@ import {
   selectCharacters,
   updateCharacters,
   charactersLoading,
-} from "../../store/createSlice";
+} from "../../store/charactersSlice";
 import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
-import styles from "./CharacterList.module.css";
+import styles from "./CharactersList.module.css";
 import loading from "../../assets/images/Loading.png";
 
 const CustomLoadButton = styled(Button)({
@@ -96,7 +96,7 @@ function CharacterList() {
   );
 
   window.scrollTo({ top: scrollRef.current, behavior: "smooth" });
-  console.log(hasMore);
+
   return (
     <Container className={styles.wrapper}>
       <Box>

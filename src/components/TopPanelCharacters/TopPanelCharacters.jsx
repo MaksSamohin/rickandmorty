@@ -15,7 +15,7 @@ import {
   selectFilters,
   fetchCharacters,
   selectAvailableFilters,
-} from "../../store/createSlice";
+} from "../../store/charactersSlice";
 import { useEffect } from "react";
 
 function TopPanelCharacters() {
@@ -32,7 +32,7 @@ function TopPanelCharacters() {
   const handleChange = (name, value) => {
     const newFilters = { ...filters, [name]: value };
     dispatch(setFilters(newFilters));
-    localStorage.setItem("filters", JSON.stringify(newFilters));
+    localStorage.setItem("charactersFilters", JSON.stringify(newFilters));
   };
 
   return (
