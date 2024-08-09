@@ -86,7 +86,6 @@ function LocationsList() {
   );
 
   window.scrollTo({ top: scrollRef.current, behavior: "smooth" });
-
   return (
     <Container className={styles.wrapper}>
       <Box>
@@ -100,7 +99,7 @@ function LocationsList() {
               sortedLocations.slice(0, visibleCount).map((item) => (
                 <Link
                   key={item.id}
-                  to={`location/${item.id}`}
+                  to={`/location/${item.id}`}
                   className={styles.cardLink}
                 >
                   <Card className={styles.cardLocation}>
