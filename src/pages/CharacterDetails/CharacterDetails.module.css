@@ -124,3 +124,12 @@
 .characterInfoEpisodesLink:hover {
     background-color: rgba(241, 241, 241, 0.705);
 }
+
+@media screen and (max-width: 768px) {
+    .detailsTop {
+        margin-top: 90px;
+    }
+    .detailsHero {
+        margin-top: 40px;
+    }
+}

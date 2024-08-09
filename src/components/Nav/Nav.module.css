@@ -3,7 +3,7 @@
     box-shadow: 0 5px 10px 5px rgba(0, 0, 0, .05);
     padding: 10px 0;
     position: relative;
-    background-color: white; 
+    background-color: white;
 }
 .navInner {
     display: flex;
@@ -19,4 +19,56 @@
 .link { 
     text-decoration: none;
     color: inherit;
+}
+.burgerBox {
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+    cursor: pointer;
+}
+.burgerBox span::after {
+    content: '';
+    display: block;
+    width: 22px;
+    height: 3px;
+    background-color: black;
+}
+.navInner .burgerBox.open span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.navInner .burgerBox.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.navInner .burgerBox.open span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+.drawerBox {
+    width: 100dvw;
+    height: 100dvh;
+    margin-top: 80px;
+}
+.drawerBoxList {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.drawerBoxList .link {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    font-weight: 700;
+    color: black;
+    font-size: 24px;
+    text-align: right;
+}
+@media screen and (max-width: 768px) {
+    .links {
+        display: none;
+    }
+    .burgerBox {
+        display: flex;
+    }
 }

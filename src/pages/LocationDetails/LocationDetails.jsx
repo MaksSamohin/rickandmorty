@@ -1,11 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectLocations,
-  fetchLocation,
-  selectStatus,
-} from "../../store/locationsSlice";
+import { selectLocations, fetchLocation } from "../../store/locationsSlice";
 import Footer from "../../components/Footer/Footer";
 import Nav from "../../components/Nav/Nav";
 import {
@@ -20,7 +16,6 @@ import {
 import styles from "./LocationDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import { Link } from "react-router-dom";
-import { selectCharacters } from "../../store/charactersSlice";
 
 function LocationDetails() {
   const navigate = useNavigate();
