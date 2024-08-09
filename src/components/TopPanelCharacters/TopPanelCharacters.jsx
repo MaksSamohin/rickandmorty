@@ -24,7 +24,9 @@ function TopPanelCharacters() {
   const availableFilters = useSelector(selectAvailableFilters);
 
   useEffect(() => {
-    dispatch(fetchCharacters({ filters }));
+    if (filters) {
+      dispatch(fetchCharacters({ filters }));
+    }
   }, [filters, dispatch]);
 
   const handleChange = (name, value) => {

@@ -1,121 +1,165 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const fetchCharacters = createAsyncThunk(
-    'characters/fetchCharacters',
-    async ({ page = 1}, { getState }) => {
-        const state = getState();
-        const currentPage = state.characters.page || page
-        const query = new URLSearchParams({page: currentPage}).toString();
-        const response = await fetch(`https://rickandmortyapi.com/api/character?${query}`);
-        const data = await response.json();
-        return data.results;
-    }
-)
-export const fetchCharacter = async (id) => {
+  "characters/fetchCharacters",
+  async ({ page = 1, filters }, { getState }) => {
+    const state = getState();
+    const currentPage = state.characters.page || page;
+    const queryParams = new URLSearchParams({
+      ...filters,
+      page: currentPage,
+    }).toString();
     const response = await fetch(
-      `https://rickandmortyapi.com/api/character/${id}`
+      `https://rickandmortyapi.com/api/character/?${queryParams}`
     );
+
+    if (!response.ok) {
+      throw new Error("Response error");
+    }
+
     const data = await response.json();
-    return data;
-}
+
+    return {
+      results: data.results,
+      info: data.info,
+    };
+  }
+);
+
+export const fetchCharacter = async (id) => {
+  const response = await fetch(
+    `https://rickandmortyapi.com/api/character/${id}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Response error");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+const initialState = {
+  characters: [],
+  status: "idle",
+  page: 1,
+  maxPage: 0,
+  error: null,
+  hasMore: true,
+  loadingCharacters: false,
+  filters: JSON.parse(localStorage.getItem("filters")) || {
+    name: "",
+    species: "",
+    gender: "",
+    status: "",
+  },
+  availableFilters: {
+    species: [],
+    gender: [],
+    status: [],
+  },
+};
+
 const charactersSlice = createSlice({
-    name: 'characters',
-    initialState: {
-        characters: [],
-        status: 'idle',
-        page: 1,
-        error: null,
-        hasMore: true,
-        filters: JSON.parse(localStorage.getItem('filters')) || {
-            name: '',
-            species: '',
-            gender: '',
-            status: '',
-        },
-        availableFilters: {
-            species: [],
-            gender: [],
-            status: [],
-        },
+  name: "characters",
+  initialState,
+  reducers: {
+    loadMoreCharacters(state) {
+      console.log(state.page);
+      console.log(state.maxPage);
+      if (state.hasMore === true && state.page < state.maxPage) {
+        state.page += 1;
+      } else {
+        state.hasMore = false;
+      }
     },
-    reducers: {
-        loadMoreCharacters(state) {
-                state.page += 1
-        },
-        setFilters(state, action) {
-            state.filters = {...state.filters, ...action.payload}
-            state.page = 1;
-        },
+    setFilters(state, action) {
+      state.filters = { ...state.filters, ...action.payload };
+      state.page = 1;
+      state.hasMore = true;
+      state.characters = [];
     },
-    extraReducers: (builder) => {
-        builder
-        .addCase(fetchCharacters.pending, (state) => {
-            state.status = 'loading';
-        })
-        .addCase(fetchCharacters.fulfilled, (state, action) => {
-            const fetchedCharacters = action.payload;
+    updateCharacters(state, action) {
+      if (action.payload) {
+        const newCharacters = action.payload.results;
+        const uniqueCharacters = newCharacters.filter(
+          (newChar) => !state.characters.some((char) => char.id === newChar.id)
+        );
+        state.characters = [...state.characters, ...uniqueCharacters];
+        state.hasMore = !!action.payload.info.next;
+        state.maxPage = action.payload.info.pages;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCharacters.pending, (state) => {
+        state.loadingCharacters = true;
+        state.status = "loading";
+      })
+      .addCase(fetchCharacters.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.loadingCharacters = false;
+        state.error = null;
+        console.log(action.payload.info.pages);
+        const fetchedCharacters = action.payload.results;
+        console.log(fetchedCharacters);
+        const currentSpecies = state.filters.species;
+        const currentGender = state.filters.gender;
+        const currentStatus = state.filters.status;
 
-            if (!Array.isArray(fetchedCharacters)) {
-                state.hasMore = false;
-            } else {
-                state.hasMore = true
+        const newSpecies = new Set(state.availableFilters.species);
+        const newGender = new Set(state.availableFilters.gender);
+        const newStatus = new Set(state.availableFilters.status);
+
+        if (Array.isArray(fetchedCharacters)) {
+          fetchedCharacters.forEach((item) => {
+            if (!currentSpecies || item.species === currentSpecies) {
+              newSpecies.add(item.species);
             }
-           
-            if (state.page === 1) {
-                state.characters = fetchedCharacters;
-            } else if (state.hasMore === true) {
-                console.log(state.characters)
-                state.characters = [...state.characters, ...fetchedCharacters];
-                console.log(state.characters)
+            if (!currentGender || item.gender === currentGender) {
+              newGender.add(item.gender);
             }
-            const currentSpecies = state.filters.species;
-            const currentGender = state.filters.gender;
-            const currentStatus = state.filters.status;
-
-            const newSpecies = new Set(state.availableFilters.species);
-            const newGender = new Set(state.availableFilters.gender);
-            const newStatus = new Set(state.availableFilters.status);
-
-            if (Array.isArray(action.payload)) {
-                action.payload.forEach((item) => {
-                    if (!currentSpecies || item.species === currentSpecies) {
-                        newSpecies.add(item.species);
-                    }
-                    if (!currentGender || item.gender === currentGender) {
-                        newGender.add(item.gender);
-                    }
-                    if (!currentStatus || item.status === currentStatus) {
-                        newStatus.add(item.status);
-                    }
-                });
-            } else {
-                console.error('Received non-iterable data:', action.payload);
+            if (!currentStatus || item.status === currentStatus) {
+              newStatus.add(item.status);
             }
+          });
+        } else {
+          console.error("Received non-iterable data:", fetchedCharacters);
+        }
 
-            state.availableFilters = {
-                species: Array.from(newSpecies),
-                gender: Array.from(newGender),
-                status: Array.from(newStatus),
-            }
+        state.availableFilters = {
+          species: Array.from(newSpecies),
+          gender: Array.from(newGender),
+          status: Array.from(newStatus),
+        };
 
-            state.status = 'succeeded';
+        const uniqueCharacters = fetchedCharacters.filter(
+          (newChar) => !state.characters.some((char) => char.id === newChar.id)
+        );
 
-        })
-        .addCase(fetchCharacters.rejected, (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message
-        })
-    } 
-})
+        state.characters = [...state.characters, ...uniqueCharacters];
+        state.hasMore =
+          !!action.payload.info.next && state.page < state.maxPage;
+        console.log(action.payload);
+        state.maxPage = action.payload.info.pages;
+      })
+      .addCase(fetchCharacters.rejected, (state, action) => {
+        state.status = "failed";
+        state.loadingCharacters = false;
+        state.error = action.error.message;
+      });
+  },
+});
 
-
-
-export const { loadMoreCharacters, setFilters, sortCharacters } = charactersSlice.actions;
-export const selectFilters = state => state.characters.filters
-export const selectCharacters = state => state.characters.characters
-export const selectStatus= state => state.characters.status
-export const selectPage= state => state.characters.page
-export const selectAvailableFilters = state => state.characters.availableFilters
-
+export const { loadMoreCharacters, setFilters, updateCharacters } =
+  charactersSlice.actions;
+export const selectFilters = (state) => state.characters.filters;
+export const selectCharacters = (state) => state.characters.characters;
+export const selectStatus = (state) => state.characters.status;
+export const selectPage = (state) => state.characters.page;
+export const selectAvailableFilters = (state) =>
+  state.characters.availableFilters;
+export const charactersLoading = (state) => state.characters.loadingCharacters;
 
 export default charactersSlice.reducer;
