@@ -1,5 +1,5 @@
 import { Container, Input } from "@mui/material";
-import picture from "../../assets/images/rickandmortylocations.png";
+import picture from "../../assets/images/rickandmortyepisodes.png";
 import styles from "./TopPanelEpisodes.module.css";
 import { Box } from "@mui/material";
 import {
@@ -21,7 +21,17 @@ function TopPanelEpisodes() {
   }, [filters, dispatch]);
 
   const handleChange = (name, value) => {
-    const newFilters = { ...filters, [name]: value };
+    const newFilters = { ...filters };
+
+    const episodePattern = /^S\d{2}(E\d{2})?$/i;
+    if (episodePattern.test(value)) {
+      newFilters.episode = value;
+      newFilters.name = "";
+    } else {
+      newFilters.name = value;
+      newFilters.episode = "";
+    }
+
     dispatch(setFilters(newFilters));
     localStorage.setItem("episodesFilters", JSON.stringify(newFilters));
   };
@@ -31,8 +41,8 @@ function TopPanelEpisodes() {
       <img src={picture} alt="" className={styles.hero} />
       <Box className={styles.filters}>
         <Input
-          onChange={(e) => handleChange("name", e.target.value)}
-          value={filters.name}
+          onChange={(e) => handleChange("query", e.target.value)}
+          value={filters.name || filters.episode || ""}
           type="text"
           name="name-filter"
           id={styles.nameFilter}
