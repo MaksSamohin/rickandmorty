@@ -44,20 +44,6 @@
     font-size: 14px;
     color: rgba(0, 0, 0, 0.6);
 }
-.loadingImg {
-    display: block;
-    margin: 0 auto;
-    animation: loading 5s infinite;
-}
-
-@keyframes loading {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
 
 @media screen and (max-width: 768px) {
     .eplist {
