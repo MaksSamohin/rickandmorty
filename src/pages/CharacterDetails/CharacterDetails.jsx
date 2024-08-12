@@ -8,6 +8,8 @@ import grayArrow from "../../assets/icons/grayArrow.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCharacter, selectCharacters } from "../../store/charactersSlice";
 import Footer from "../../components/Footer/Footer";
+import { fetchEpisode } from "../../store/episodesSlice";
+
 function CharacterDetails() {
   const [character, setCharacter] = useState("");
   const [episodes, setEpisodes] = useState("");
@@ -33,16 +35,16 @@ function CharacterDetails() {
         });
     }
   }, [characters]);
+
   useEffect(() => {
     if (character && character.episode) {
-      const fetchAllEpisodes = async () => {
-        const episodesDataPromises = character.episode.map((url) =>
-          fetch(url).then((response) => response.json())
-        );
-        const episodeData = await Promise.all(episodesDataPromises);
-        setEpisodes(episodeData);
-      };
-      fetchAllEpisodes();
+      const id = character.episode
+        .map((url) => url.split("/").pop())
+        .toString();
+
+      dispatch(fetchEpisode(id))
+        .unwrap()
+        .then((data) => setEpisodes(data));
     }
   }, [character]);
 

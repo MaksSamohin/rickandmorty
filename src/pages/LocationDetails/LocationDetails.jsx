@@ -16,6 +16,7 @@ import {
 import styles from "./LocationDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import { Link } from "react-router-dom";
+import { fetchCharacter } from "../../store/charactersSlice";
 
 function LocationDetails() {
   const navigate = useNavigate();
@@ -41,17 +42,16 @@ function LocationDetails() {
         });
     }
   }, [locations]);
+
   useEffect(() => {
     if (location && location.residents) {
-      const fetchAllResidents = async () => {
-        const residentDataPromises = location.residents.map((url) => {
-          return fetch(url).then((response) => response.json());
-        });
-        const residentData = await Promise.all(residentDataPromises);
-        setResidents(residentData);
-      };
+      const id = location.residents
+        .map((url) => url.split("/").pop())
+        .toString();
 
-      fetchAllResidents();
+      dispatch(fetchCharacter(id))
+        .unwrap()
+        .then((data) => setResidents(data));
     }
   }, [location]);
 
