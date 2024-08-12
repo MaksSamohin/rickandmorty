@@ -42,7 +42,14 @@ function TopPanelCharacters() {
   };
 
   const handleChangeTemp = (name, value) => {
-    setTempFilters((prev) => ({ ...prev, [name]: value }));
+    if (name === "name") {
+      setTempFilters((prev) => ({ ...prev, [name]: value }));
+      const newFilters = { ...tempFilters, [name]: value };
+      dispatch(setFilters(newFilters));
+      localStorage.setItem("charactersFilters", JSON.stringify(newFilters));
+    } else {
+      setTempFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleApplyFilters = () => {
@@ -59,7 +66,7 @@ function TopPanelCharacters() {
       <img src={picture} alt="" className={styles.hero} />
       <Box className={styles.filters}>
         <Input
-          onChange={(e) => handleChange("name", e.target.value)}
+          onChange={(e) => handleChangeTemp("name", e.target.value)}
           value={filters.name}
           type="text"
           name="name"

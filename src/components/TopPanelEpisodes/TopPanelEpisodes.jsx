@@ -20,7 +20,7 @@ function TopPanelEpisodes() {
     }
   }, [filters, dispatch]);
 
-  const handleChange = (name, value) => {
+  const handleChange = (value) => {
     const newFilters = { ...filters };
 
     const episodePattern = /^S\d{2}(E\d{2})?$/i;
