@@ -5,7 +5,7 @@ import styles from "./CharacterCard.module.css";
 
 function CharacterCard({ character }) {
   return (
-    <Link to={`character/${character.id}`} className={styles.cardLink}>
+    <Link to={`/character/${character.id}`} className={styles.cardLink}>
       <Card className={styles.cardCharacter}>
         <CardContent className={styles.cardCharacterContent}>
           <CardMedia
