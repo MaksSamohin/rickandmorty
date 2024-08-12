@@ -20,6 +20,7 @@ import {
   fetchCharacter,
   fetchCharactersByID,
 } from "../../store/charactersSlice";
+import CharacterCard from "../../components/CharacterCard/CharacterCard";
 
 function EpisodeDetails() {
   const navigate = useNavigate();
@@ -99,32 +100,7 @@ function EpisodeDetails() {
             </Typography>
             <Box className={styles.episodeResidentsList}>
               {cast.length > 0 ? (
-                cast.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/character/${item.id}`}
-                    className={styles.cardLink}
-                  >
-                    <Card className={styles.cardCharacter}>
-                      <CardContent className={styles.cardCharacterContent}>
-                        <CardMedia
-                          component="img"
-                          image={item.image}
-                          alt={item.name}
-                          className={styles.cardCharacterImg}
-                        />
-                        <Box className={styles.cardCharacterContentText}>
-                          <Typography className={styles.cardCharacterName}>
-                            {item.name}
-                          </Typography>
-                          <Typography className={styles.cardCharacterSpecies}>
-                            {item.species}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))
+                cast.map((character) => <CharacterCard character={character} />)
               ) : (
                 <Typography>No cast</Typography>
               )}

@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Container,
-  Typography,
-  Box,
-  Button,
-} from "@mui/material";
+import { Container, Button, Box } from "@mui/material";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,10 +17,10 @@ import {
   LOAD_MORE_COUNT_MOBILE,
 } from "./constants";
 import { styled } from "@mui/material";
-import { Link } from "react-router-dom";
 import styles from "./CharactersList.module.css";
 import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
 import Loading from "../Loading/Loading";
+import CharacterCard from "../CharacterCard/CharacterCard";
 
 const CustomLoadButton = styled(Button)({
   display: "block",
@@ -108,32 +100,9 @@ function CharacterList() {
         ) : (
           <Box className={styles.charlist}>
             {sortedCharacters.length > 0 ? (
-              sortedCharacters.slice(0, visibleCount).map((item) => (
-                <Link
-                  key={item.id}
-                  to={`character/${item.id}`}
-                  className={styles.cardLink}
-                >
-                  <Card className={styles.cardCharacter}>
-                    <CardContent className={styles.cardCharacterContent}>
-                      <CardMedia
-                        component="img"
-                        image={item.image}
-                        alt={item.name}
-                        className={styles.cardCharacterImg}
-                      />
-                      <Box className={styles.cardCharacterContentText}>
-                        <Typography className={styles.cardCharacterName}>
-                          {item.name}
-                        </Typography>
-                        <Typography className={styles.cardCharacterSpecies}>
-                          {item.species}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))
+              sortedCharacters
+                .slice(0, visibleCount)
+                .map((character) => <CharacterCard character={character} />)
             ) : (
               <Box>No data</Box>
             )}
