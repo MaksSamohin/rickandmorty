@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import Nav from "../../components/Nav/Nav";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -155,11 +155,10 @@ function CharacterDetails() {
               </Typography>
               <Box className={styles.characterInfoEpisodesList}>
                 {episodes
-                  ? episodes.map((item, index) => {
+                  ? episodes.map((item) => {
                       return (
-                        <>
+                        <React.Fragment key={item.id}>
                           <Link
-                            key={index}
                             to={`/episode/${item.id}`}
                             className={styles.characterInfoEpisodesLink}
                           >
@@ -187,7 +186,7 @@ function CharacterDetails() {
                             </Box>
                           </Link>
                           <hr className={styles.characterLine}></hr>
-                        </>
+                        </React.Fragment>
                       );
                     })
                   : "No episodes"}
