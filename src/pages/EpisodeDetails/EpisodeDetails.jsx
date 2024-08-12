@@ -16,6 +16,11 @@ import {
 import styles from "./EpisodeDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import { Link } from "react-router-dom";
+import {
+  fetchCharacter,
+  fetchCharactersByID,
+} from "../../store/charactersSlice";
+import CharacterCard from "../../components/CharacterCard/CharacterCard";
 
 function EpisodeDetails() {
   const navigate = useNavigate();
@@ -41,17 +46,16 @@ function EpisodeDetails() {
         });
     }
   }, [episodes]);
+
   useEffect(() => {
     if (episode && episode.characters) {
-      const fetchAllResidents = async () => {
-        const castDataPromises = episode.characters.map((url) =>
-          fetch(url).then((response) => response.json())
-        );
-        const castData = await Promise.all(castDataPromises);
-        setCast(castData);
-      };
+      const id = episode.characters
+        .map((url) => url.split("/").pop())
+        .toString();
 
-      fetchAllResidents();
+      dispatch(fetchCharacter(id))
+        .unwrap()
+        .then((data) => setCast(data));
     }
   }, [episode]);
 
@@ -96,32 +100,7 @@ function EpisodeDetails() {
             </Typography>
             <Box className={styles.episodeResidentsList}>
               {cast.length > 0 ? (
-                cast.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/character/${item.id}`}
-                    className={styles.cardLink}
-                  >
-                    <Card className={styles.cardCharacter}>
-                      <CardContent className={styles.cardCharacterContent}>
-                        <CardMedia
-                          component="img"
-                          image={item.image}
-                          alt={item.name}
-                          className={styles.cardCharacterImg}
-                        />
-                        <Box className={styles.cardCharacterContentText}>
-                          <Typography className={styles.cardCharacterName}>
-                            {item.name}
-                          </Typography>
-                          <Typography className={styles.cardCharacterSpecies}>
-                            {item.species}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))
+                cast.map((character) => <CharacterCard character={character} />)
               ) : (
                 <Typography>No cast</Typography>
               )}

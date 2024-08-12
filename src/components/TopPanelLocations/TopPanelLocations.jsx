@@ -21,6 +21,7 @@ import {
 } from "../../store/locationsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
 
 function TopPanelLocations() {
   const dispatch = useDispatch();
@@ -42,7 +43,14 @@ function TopPanelLocations() {
   };
 
   const handleChangeTemp = (name, value) => {
-    setTempFilters((prev) => ({ ...prev, [name]: value }));
+    if (name === "name") {
+      setTempFilters((prev) => ({ ...prev, [name]: value }));
+      const newFilters = { ...tempFilters, [name]: value };
+      dispatch(setFilters(newFilters));
+      localStorage.setItem("locationsFilters", JSON.stringify(newFilters));
+    } else {
+      setTempFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleApplyFilters = () => {
@@ -59,7 +67,7 @@ function TopPanelLocations() {
       <img src={picture} alt="" className={styles.hero} />
       <Box className={styles.locationFilters}>
         <Input
-          onChange={(e) => handleChange("name", e.target.value)}
+          onChange={(e) => handleChangeTemp("name", e.target.value)}
           value={filters.name}
           type="text"
           name="name-filter"
@@ -139,7 +147,7 @@ function TopPanelLocations() {
               <InputLabel id="select-types">Type</InputLabel>
               <Select
                 onChange={(e) => handleChangeTemp("type", e.target.value)}
-                value={filters.type}
+                value={tempFilters.type}
                 labelId="select-types"
                 id={styles.typeFilter}
                 className={styles.filter}
@@ -164,7 +172,7 @@ function TopPanelLocations() {
               <InputLabel id="select-dimensions">Dimension</InputLabel>
               <Select
                 onChange={(e) => handleChangeTemp("dimension", e.target.value)}
-                value={filters.dimension}
+                value={tempFilters.dimension}
                 labelId="select-dimension"
                 id={styles.dimensionFilter}
                 className={styles.filter}

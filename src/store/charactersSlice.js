@@ -39,7 +39,7 @@ export const fetchCharacter = createAsyncThunk(
 
   const data = await response.json();
   return data;
-}
+  }
 )
 
 const initialState = {

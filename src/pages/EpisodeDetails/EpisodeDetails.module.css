@@ -56,32 +56,6 @@
     color: rgba(142, 142, 147, 1);
     font-size: 24px;
 }
-.episodeResidents .cardLink {
-    text-decoration: none;
-}
-.episodeResidentsList .cardCharacter {
-    width: 240px;
-    cursor: pointer;
-}
-.cardCharacter:hover {
-    box-shadow: 0 0 5px 5px #a0a0a0c5;
-}
-.cardCharacter .cardCharacterContent {
-    padding: 0;
-}
-.cardCharacterImg {
-    width: 100%;
-    height: 160px;
-}
-.cardCharacterContentText {
-    padding: 10px;
-    
-}
-.cardCharacterContentText .cardCharacterName {
-    font-weight: 700;
-    font-size: 20px;
-    text-decoration: inherit;
-}
 
 @media screen and (max-width: 768px) {
     .detailsTop {
