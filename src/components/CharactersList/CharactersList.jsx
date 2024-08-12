@@ -27,8 +27,8 @@ import {
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import styles from "./CharactersList.module.css";
-import loading from "../../assets/images/Loading.png";
 import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
+import Loading from "../Loading/Loading";
 
 const CustomLoadButton = styled(Button)({
   display: "block",
@@ -104,9 +104,7 @@ function CharacterList() {
     <Container className={styles.wrapper}>
       <Box>
         {loadingChars ? (
-          <Box>
-            <img src={loading} alt="" className={styles.loadingImg} />
-          </Box>
+          <Loading />
         ) : (
           <Box className={styles.charlist}>
             {sortedCharacters.length > 0 ? (

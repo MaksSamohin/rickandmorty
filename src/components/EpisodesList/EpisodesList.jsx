@@ -28,6 +28,7 @@ import { Link } from "react-router-dom";
 import styles from "./EpisodesList.module.css";
 import loading from "../../assets/images/Loading.png";
 import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
+import Loading from "../Loading/Loading";
 
 const CustomLoadButton = styled(Button)({
   display: "block",
@@ -101,9 +102,7 @@ function EpisodesList() {
     <Container className={styles.wrapper}>
       <Box>
         {loadingEps ? (
-          <Box>
-            <img src={loading} alt="" className={styles.loadingImg} />
-          </Box>
+          <Loading />
         ) : (
           <Box className={styles.eplist}>
             {sortedEpisodes.length > 0 ? (
