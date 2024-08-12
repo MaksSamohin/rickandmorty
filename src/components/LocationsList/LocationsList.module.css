@@ -4,9 +4,9 @@
 .loclist {
     padding: 20px 0 60px;
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 30px;
+    justify-content: center;
+    gap: 63px;
 }
 .cardLink {
     text-decoration: none;
