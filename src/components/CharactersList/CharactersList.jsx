@@ -102,7 +102,9 @@ function CharacterList() {
             {sortedCharacters.length > 0 ? (
               sortedCharacters
                 .slice(0, visibleCount)
-                .map((character) => <CharacterCard character={character} />)
+                .map((character) => (
+                  <CharacterCard key={character.id} character={character} />
+                ))
             ) : (
               <Box>No data</Box>
             )}
