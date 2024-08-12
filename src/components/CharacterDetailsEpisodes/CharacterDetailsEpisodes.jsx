@@ -8,7 +8,8 @@ import { fetchEpisode } from "../../store/episodesSlice";
 
 function CharacterDetailsEpisodes({ character }) {
   const dispatch = useDispatch();
-  const [episodes, setEpisodes] = useState("");
+  const [episodes, setEpisodes] = useState([]);
+
   useEffect(() => {
     if (character && character.episode) {
       const id = character.episode
@@ -17,7 +18,13 @@ function CharacterDetailsEpisodes({ character }) {
 
       dispatch(fetchEpisode(id))
         .unwrap()
-        .then((data) => setEpisodes(data));
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setEpisodes(data);
+          } else {
+            setEpisodes([data]);
+          }
+        });
     }
   }, [character]);
 
