@@ -81,7 +81,6 @@ function CharacterList() {
 
   const handleLoadMore = useCallback(
     (e) => {
-      e.preventDefault();
       scrollRef.current = window.scrollY;
 
       const newVisibleCount = visibleCount + currentLoadMore;
