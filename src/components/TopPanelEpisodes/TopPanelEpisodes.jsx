@@ -23,7 +23,7 @@ function TopPanelEpisodes() {
   const handleChange = (value) => {
     const newFilters = { ...filters };
 
-    const episodePattern = /^S\d{2}(E\d{2})?$/i;
+    const episodePattern = /^S\d{2}(E\d{0,2})?$/i;
     if (episodePattern.test(value)) {
       newFilters.episode = value;
       newFilters.name = "";
@@ -41,7 +41,7 @@ function TopPanelEpisodes() {
       <img src={picture} alt="" className={styles.hero} />
       <Box className={styles.filters}>
         <Input
-          onChange={(e) => handleChange("query", e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
           value={filters.name || filters.episode || ""}
           type="text"
           name="name-filter"
