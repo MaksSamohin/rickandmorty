@@ -1,0 +1,50 @@
+.characterEpisodesTitle {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: rgba(142, 142, 147, 1);
+}
+
+.characterEpisodesList {
+    display: flex;
+    flex-direction: column;
+    max-height: 520px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.characterEpisodesList .characterEpisodesLink {
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+.characterLine {
+    min-width: 340px;
+    height: 1px;
+    background-color: rgba(189, 189, 189, 0.582);
+    margin: 20px 0;
+    border: none;
+}
+.episodeArrowLink {
+    position: absolute;
+    right: 10px;
+    top: 30px;
+}
+.characterEpisodesLink .characterEpisodeNumber {
+    font-size: 16px;
+    font-weight: 700;
+}
+.characterEpisodesLink .characterEpisodeName {
+    color: rgba(110, 121, 140, 1);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.characterEpisodesLink .characterEpisodeAirdate {
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    color: rgba(142, 142, 147, 1);
+    font-size: 10px;
+}
+
+.characterEpisodesLink:hover {
+    background-color: rgba(241, 241, 241, 0.705);
+}
