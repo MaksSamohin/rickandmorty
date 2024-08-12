@@ -48,3 +48,10 @@
         transform: rotate(360deg);
     }
 }
+
+@media screen and (max-width: 768px) {
+    .charlist {
+        flex-direction: column;
+        align-items: center;
+    }
+}

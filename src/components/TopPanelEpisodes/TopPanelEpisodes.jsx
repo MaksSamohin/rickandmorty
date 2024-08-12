@@ -48,7 +48,6 @@ function TopPanelEpisodes() {
           id={styles.nameFilter}
           className="filter"
           placeholder="Filter by name or episode (ex. S01 or S01E02)"
-          sx={{ height: 56, margin: "0 auto", minWidth: 500 }}
         />
       </Box>
     </Container>

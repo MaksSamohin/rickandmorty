@@ -58,3 +58,10 @@
         transform: rotate(360deg);
     }
 }
+
+@media screen and (max-width: 768px) {
+    .eplist {
+        flex-direction: column;
+        align-items: center;
+    }
+}

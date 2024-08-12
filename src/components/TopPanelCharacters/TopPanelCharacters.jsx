@@ -7,6 +7,7 @@ import {
   FormControl,
   Button,
   Modal,
+  Typography,
 } from "@mui/material";
 import picture from "../../assets/images/rickandmorty.png";
 import filterIcon from "../../assets/icons/filter.svg";
@@ -26,6 +27,7 @@ function TopPanelCharacters() {
   const filters = useSelector(selectFilters);
   const availableFilters = useSelector(selectAvailableFilters);
   const [openModal, setOpenModal] = useState(false);
+  const [tempFilters, setTempFilters] = useState(filters);
 
   useEffect(() => {
     if (filters) {
@@ -37,6 +39,16 @@ function TopPanelCharacters() {
     const newFilters = { ...filters, [name]: value };
     dispatch(setFilters(newFilters));
     localStorage.setItem("charactersFilters", JSON.stringify(newFilters));
+  };
+
+  const handleChangeTemp = (name, value) => {
+    setTempFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleApplyFilters = () => {
+    dispatch(setFilters(tempFilters));
+    localStorage.setItem("charactersFilters", JSON.stringify(tempFilters));
+    setOpenModal(false);
   };
 
   const handleOpenModal = () => setOpenModal(true);
@@ -145,11 +157,14 @@ function TopPanelCharacters() {
         aria-describedby="modal-modal-description"
       >
         <Box className={styles.advancedFiltersModal}>
+          <Typography className={styles.advancedFiltersModalTitle}>
+            Filters
+          </Typography>
           <FormControl>
             <InputLabel id="select-species">Species</InputLabel>
             <Select
-              value={filters.species}
-              onChange={(e) => handleChange("species", e.target.value)}
+              value={tempFilters.species}
+              onChange={(e) => handleChangeTemp("species", e.target.value)}
               labelId="select-species"
               id="species"
               className={styles.filterModal}
@@ -174,8 +189,8 @@ function TopPanelCharacters() {
           <FormControl>
             <InputLabel id="select-genders">Gender</InputLabel>
             <Select
-              value={filters.gender}
-              onChange={(e) => handleChange("gender", e.target.value)}
+              value={tempFilters.gender}
+              onChange={(e) => handleChangeTemp("gender", e.target.value)}
               labelId="select-gender"
               id="gender"
               className={styles.filterModal}
@@ -197,8 +212,8 @@ function TopPanelCharacters() {
           <FormControl>
             <InputLabel id="select-species">Status</InputLabel>
             <Select
-              value={filters.status}
-              onChange={(e) => handleChange("status", e.target.value)}
+              value={tempFilters.status}
+              onChange={(e) => handleChangeTemp("status", e.target.value)}
               labelId="select-status"
               id="status"
               className={styles.filterModal}
@@ -217,6 +232,12 @@ function TopPanelCharacters() {
               })}
             </Select>
           </FormControl>
+          <Button
+            className={styles.applyFiltersMobile}
+            onClick={handleApplyFilters}
+          >
+            Apply
+          </Button>
         </Box>
       </Modal>
     </Container>

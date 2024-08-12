@@ -11,7 +11,9 @@
 .filters {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
+    gap: 10px;
 }
 .advancedFilters {
     display: flex;
@@ -59,6 +61,14 @@
         margin: 0 auto;
         color: rgba(33, 150, 243, 1);
         background-color: rgba(227, 242, 253, 1);
+        width: 100%;
+        max-width: 240px;
+    }
+    .advancedFiltersModal .applyFiltersMobile {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(33, 150, 243, 1);
+        background-color: rgba(227, 242, 253, 1);
     }
     .advancedFiltersModal {
         position: absolute;
@@ -66,12 +76,17 @@
         left: 50%;
         min-height: 50dvh;
         transform: translate(-50%, -50%);
-        width: 400px;
+        width: 80%;
         background-color: white;
-    }
-    .filterModal {
-        min-width: 240px;
 
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    .advancedFiltersModal .advancedFiltersModalTitle {
+        font-weight: 700;
+        font-size: 18px;
     }
 }
 

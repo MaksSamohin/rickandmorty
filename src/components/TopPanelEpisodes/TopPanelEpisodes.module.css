@@ -14,8 +14,14 @@
     background-repeat: no-repeat;
     background-position-x: 5px;
     background-position-y: center;
-    min-width: 326px;
+    min-width: 426px;
     padding: 35px;
     box-sizing: inherit;
 }
 
+@media screen and (max-width: 768px) {
+    #nameFilter {
+        min-width: 0;
+        max-width: 240px;
+    }
+}

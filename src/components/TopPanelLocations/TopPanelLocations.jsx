@@ -5,10 +5,14 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Button,
+  Modal,
+  Typography,
+  Box,
 } from "@mui/material";
 import picture from "../../assets/images/rickandmortylocations.png";
 import styles from "./TopPanelLocations.module.css";
-import { Box } from "@mui/material";
+import filterIcon from "../../assets/icons/filter.svg";
 import {
   setFilters,
   selectFilters,
@@ -16,12 +20,14 @@ import {
   selectAvailableFilters,
 } from "../../store/locationsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function TopPanelLocations() {
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
   const availableFilters = useSelector(selectAvailableFilters);
+  const [openModal, setOpenModal] = useState(false);
+  const [tempFilters, setTempFilters] = useState(filters);
 
   useEffect(() => {
     if (filters) {
@@ -34,6 +40,19 @@ function TopPanelLocations() {
     dispatch(setFilters(newFilters));
     localStorage.setItem("locationsFilters", JSON.stringify(newFilters));
   };
+
+  const handleChangeTemp = (name, value) => {
+    setTempFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleApplyFilters = () => {
+    dispatch(setFilters(tempFilters));
+    localStorage.setItem("locationsFilters", JSON.stringify(tempFilters));
+    setOpenModal(false);
+  };
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   return (
     <Container className={styles.topPanelLocations}>
@@ -49,54 +68,129 @@ function TopPanelLocations() {
           placeholder="Filter by name"
           sx={{ height: 56 }}
         />
-        <FormControl>
-          <InputLabel id="select-types">Type</InputLabel>
-          <Select
-            onChange={(e) => handleChange("type", e.target.value)}
-            value={filters.type}
-            labelId="select-types"
-            id={styles.typeFilter}
-            className={styles.filter}
-            label="Type"
-            sx={{
-              height: 56,
-            }}
-          >
-            <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
-              None
-            </MenuItem>
-            {availableFilters.type.map((item) => {
-              return (
-                <MenuItem key={item} value={item}>
-                  {item}
+        <Box className={styles.advancedFilters}>
+          <FormControl>
+            <InputLabel id="select-types">Type</InputLabel>
+            <Select
+              onChange={(e) => handleChange("type", e.target.value)}
+              value={filters.type}
+              labelId="select-types"
+              id={styles.typeFilter}
+              className={styles.filter}
+              label="Type"
+              sx={{
+                height: 56,
+              }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.type.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="select-dimensions">Dimension</InputLabel>
+            <Select
+              onChange={(e) => handleChange("dimension", e.target.value)}
+              value={filters.dimension}
+              labelId="select-dimension"
+              id={styles.dimensionFilter}
+              className={styles.filter}
+              label="Dimension"
+              sx={{ height: 56 }}
+            >
+              <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                None
+              </MenuItem>
+              {availableFilters.dimension.map((item) => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Box>
+        <Button
+          className={styles.advancedFiltersMobile}
+          onClick={handleOpenModal}
+        >
+          <img src={filterIcon} alt="Filter" />
+          Advanced filters
+        </Button>
+        <Modal
+          open={openModal}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className={styles.advancedFiltersModal}>
+            <Typography className={styles.advancedFiltersModalTitle}>
+              Filters
+            </Typography>
+            <FormControl>
+              <InputLabel id="select-types">Type</InputLabel>
+              <Select
+                onChange={(e) => handleChangeTemp("type", e.target.value)}
+                value={filters.type}
+                labelId="select-types"
+                id={styles.typeFilter}
+                className={styles.filter}
+                label="Type"
+                sx={{
+                  height: 56,
+                }}
+              >
+                <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                  None
                 </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="select-dimensions">Dimension</InputLabel>
-          <Select
-            onChange={(e) => handleChange("dimension", e.target.value)}
-            value={filters.dimension}
-            labelId="select-dimension"
-            id={styles.dimensionFilter}
-            className={styles.filter}
-            label="Dimension"
-            sx={{ height: 56 }}
-          >
-            <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
-              None
-            </MenuItem>
-            {availableFilters.dimension.map((item) => {
-              return (
-                <MenuItem key={item} value={item}>
-                  {item}
+                {availableFilters.type.map((item) => {
+                  return (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="select-dimensions">Dimension</InputLabel>
+              <Select
+                onChange={(e) => handleChangeTemp("dimension", e.target.value)}
+                value={filters.dimension}
+                labelId="select-dimension"
+                id={styles.dimensionFilter}
+                className={styles.filter}
+                label="Dimension"
+                sx={{ height: 56 }}
+              >
+                <MenuItem value="" sx={{ fontStyle: "italic", color: "gray" }}>
+                  None
                 </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+                {availableFilters.dimension.map((item) => {
+                  return (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <Button
+              className={styles.applyFiltersMobile}
+              onClick={handleApplyFilters}
+            >
+              Apply
+            </Button>
+          </Box>
+        </Modal>
       </Box>
     </Container>
   );
