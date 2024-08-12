@@ -18,11 +18,17 @@ import {
   updateCharacters,
   charactersLoading,
 } from "../../store/charactersSlice";
-import { INITIAL_LOAD, LOAD_MORE_COUNT } from "./constants";
+import {
+  INITIAL_LOAD,
+  LOAD_MORE_COUNT,
+  INITIAL_LOAD_MOBILE,
+  LOAD_MORE_COUNT_MOBILE,
+} from "./constants";
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import styles from "./CharactersList.module.css";
 import loading from "../../assets/images/Loading.png";
+import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
 
 const CustomLoadButton = styled(Button)({
   display: "block",
@@ -33,13 +39,19 @@ const CustomLoadButton = styled(Button)({
 });
 
 function CharacterList() {
+  let currentInitial = useCheckMobileScreen()
+    ? INITIAL_LOAD_MOBILE
+    : INITIAL_LOAD;
+  let currentLoadMore = useCheckMobileScreen()
+    ? LOAD_MORE_COUNT_MOBILE
+    : LOAD_MORE_COUNT;
   const dispatch = useDispatch();
   const { status, hasMore } = useSelector((state) => state.characters);
   const characters = useSelector(selectCharacters);
   const loadingChars = useSelector(charactersLoading);
   const filters = useSelector(selectFilters);
   const page = useSelector(selectPage);
-  const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD);
+  const [visibleCount, setVisibleCount] = useState(currentInitial);
   const [sortedCharacters, setSortedCharacters] = useState([]);
   const scrollRef = useRef(null);
 
@@ -72,7 +84,7 @@ function CharacterList() {
   }, [characters, filters, visibleCount, hasMore, dispatch, page]);
 
   useEffect(() => {
-    setVisibleCount(INITIAL_LOAD);
+    setVisibleCount(currentInitial);
   }, [filters]);
 
   const handleLoadMore = useCallback(
@@ -80,7 +92,7 @@ function CharacterList() {
       e.preventDefault();
       scrollRef.current = window.scrollY;
 
-      const newVisibleCount = visibleCount + LOAD_MORE_COUNT;
+      const newVisibleCount = visibleCount + currentLoadMore;
       setVisibleCount(newVisibleCount);
     },
     [dispatch, sortedCharacters, visibleCount, hasMore, filters, page]

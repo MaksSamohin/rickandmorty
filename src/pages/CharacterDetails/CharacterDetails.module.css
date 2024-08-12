@@ -132,4 +132,7 @@
     .detailsHero {
         margin-top: 40px;
     }
+    .detailsTop .characterName {
+        font-size: 32px;
+    }
 }

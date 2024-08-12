@@ -155,10 +155,11 @@ function CharacterDetails() {
               </Typography>
               <Box className={styles.characterInfoEpisodesList}>
                 {episodes
-                  ? episodes.map((item) => {
+                  ? episodes.map((item, index) => {
                       return (
                         <>
                           <Link
+                            key={index}
                             to={`/episode/${item.id}`}
                             className={styles.characterInfoEpisodesLink}
                           >

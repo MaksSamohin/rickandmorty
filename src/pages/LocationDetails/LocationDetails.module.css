@@ -90,4 +90,12 @@
     .detailsHero {
         margin-top: 40px;
     }
+    .locationInfo .locationName {
+        margin-top: 50px;
+    }
+    .locationResidentsList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }

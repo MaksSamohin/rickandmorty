@@ -90,4 +90,12 @@
     .detailsHero {
         margin-top: 40px;
     }
+    .episodeInfo .episodeName {
+        margin-top: 50px;
+    }
+    .episodeResidentsList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
