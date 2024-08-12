@@ -9,6 +9,7 @@ function CharacterDetailsInformations({ character }) {
     ? character.location.url.split("/").pop()
     : "";
 
+  console.log(character);
   return (
     <Box className={styles.characterInformations}>
       <Typography className={styles.characterInformationsTitle}>
@@ -56,7 +57,15 @@ function CharacterDetailsInformations({ character }) {
           </Typography>
         </Box>
         <Box className={styles.characterInformationsColumnItem}>
-          <Link to={`/location/${locationId}`} className={styles.locationLink}>
+          <Link
+            to={
+              character.location &&
+              character.location.name.toLowerCase() !== "unknown"
+                ? `/location/${locationId}`
+                : "/"
+            }
+            className={styles.locationLink}
+          >
             <Typography className={styles.characterInformationsItemTitle}>
               Location
             </Typography>
