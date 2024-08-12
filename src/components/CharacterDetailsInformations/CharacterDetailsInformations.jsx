@@ -9,7 +9,6 @@ function CharacterDetailsInformations({ character }) {
     ? character.location.url.split("/").pop()
     : "";
 
-  console.log(character);
   return (
     <Box className={styles.characterInformations}>
       <Typography className={styles.characterInformationsTitle}>
