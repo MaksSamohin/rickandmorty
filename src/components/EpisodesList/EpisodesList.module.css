@@ -1,7 +1,7 @@
 .wrapper {
     padding-bottom: 70px;
 }
-.charlist {
+.eplist {
     padding: 20px 0 60px;
     display: flex;
     justify-content: space-between;
@@ -11,28 +11,38 @@
 .cardLink {
     text-decoration: none;
 }
-.cardCharacter {
+.cardEpisode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     width: 240px;
+    min-height: 128px;
     cursor: pointer;
 }
-.cardCharacter:hover {
+.cardEpisode:hover {
     box-shadow: 0 0 5px 5px #a0a0a0c5;
 }
-.cardCharacter .cardCharacterContent {
-    padding: 0;
-}
-.cardCharacterImg {
-    width: 100%;
-    height: 160px;
-}
-.cardCharacterContentText {
+
+.cardEpisodeContentText {
     padding: 10px;
-    
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
-.cardCharacterContentText .cardCharacterName {
+.cardEpisodeContentText .cardEpisodeName {
     font-weight: 700;
     font-size: 20px;
     text-decoration: inherit;
+}
+.cardEpisodeContentText .cardEpisodeAirdate {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+.cardEpisodeContentText .cardEpisodeNumber {
+    font-weight: 700;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
 }
 .loadingImg {
     display: block;
@@ -50,7 +60,7 @@
 }
 
 @media screen and (max-width: 768px) {
-    .charlist {
+    .eplist {
         flex-direction: column;
         align-items: center;
     }

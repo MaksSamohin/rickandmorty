@@ -9,14 +9,14 @@ import {
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchLocations,
+  fetchEpisodes,
   selectFilters,
-  loadMoreLocations,
+  loadMoreEpisodes,
   selectPage,
-  selectLocations,
-  updateLocations,
-  locationsLoading,
-} from "../../store/locationsSlice";
+  selectEpisodes,
+  updateEpisodes,
+  episodesLoading,
+} from "../../store/episodesSlice";
 import {
   INITIAL_LOAD,
   LOAD_MORE_COUNT,
@@ -25,7 +25,7 @@ import {
 } from "./constants";
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
-import styles from "./LocationsList.module.css";
+import styles from "./EpisodesList.module.css";
 import loading from "../../assets/images/Loading.png";
 import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
 
@@ -37,7 +37,7 @@ const CustomLoadButton = styled(Button)({
   minWidth: "140px",
 });
 
-function LocationsList() {
+function EpisodesList() {
   let currentInitial = useCheckMobileScreen()
     ? INITIAL_LOAD_MOBILE
     : INITIAL_LOAD;
@@ -45,41 +45,41 @@ function LocationsList() {
     ? LOAD_MORE_COUNT_MOBILE
     : LOAD_MORE_COUNT;
   const dispatch = useDispatch();
-  const { status, hasMore } = useSelector((state) => state.locations);
-  const locations = useSelector(selectLocations);
-  const loadingLocs = useSelector(locationsLoading);
+  const { status, hasMore } = useSelector((state) => state.episodes);
+  const episodes = useSelector(selectEpisodes);
+  const loadingEps = useSelector(episodesLoading);
   const filters = useSelector(selectFilters);
   const page = useSelector(selectPage);
   const [visibleCount, setVisibleCount] = useState(currentInitial);
-  const [sortedLocations, setSortedLocations] = useState([]);
+  const [sortedEpisodes, setSortedEpisodes] = useState([]);
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    const filteredLocations = locations.filter((location) => {
-      if (filters.type && location.type !== filters.type) return false;
-      if (filters.dimension && location.dimension !== filters.dimension)
+    const filteredEpisodes = episodes.filter((episode) => {
+      if (filters.type && episode.type !== filters.type) return false;
+      if (filters.dimension && episode.dimension !== filters.dimension)
         return false;
       if (
         filters.name &&
-        !location.name.toLowerCase().includes(filters.name.toLowerCase())
+        !episode.name.toLowerCase().includes(filters.name.toLowerCase())
       )
         return false;
       return true;
     });
 
-    const uniqueLocations = Array.from(
-      new Set(filteredLocations.map((item) => item.id))
-    ).map((id) => filteredLocations.find((item) => item.id === id));
+    const uniqueEpisodes = Array.from(
+      new Set(filteredEpisodes.map((item) => item.id))
+    ).map((id) => filteredEpisodes.find((item) => item.id === id));
 
-    setSortedLocations(uniqueLocations);
+    setSortedEpisodes(uniqueEpisodes);
 
-    if (uniqueLocations.length < visibleCount && hasMore) {
-      dispatch(fetchLocations({ page, filters })).then((result) => {
-        dispatch(updateLocations(result.payload));
-        dispatch(loadMoreLocations());
+    if (uniqueEpisodes.length < visibleCount && hasMore) {
+      dispatch(fetchEpisodes({ page, filters })).then((result) => {
+        dispatch(updateEpisodes(result.payload));
+        dispatch(loadMoreEpisodes());
       });
     }
-  }, [locations, filters, visibleCount, hasMore, dispatch, page]);
+  }, [episodes, filters, visibleCount, hasMore, dispatch, page]);
 
   useEffect(() => {
     setVisibleCount(currentInitial);
@@ -93,34 +93,37 @@ function LocationsList() {
       const newVisibleCount = visibleCount + currentLoadMore;
       setVisibleCount(newVisibleCount);
     },
-    [dispatch, sortedLocations, visibleCount, hasMore, filters, page]
+    [dispatch, sortedEpisodes, visibleCount, hasMore, filters, page]
   );
 
   window.scrollTo({ top: scrollRef.current, behavior: "smooth" });
   return (
     <Container className={styles.wrapper}>
       <Box>
-        {loadingLocs ? (
+        {loadingEps ? (
           <Box>
             <img src={loading} alt="" className={styles.loadingImg} />
           </Box>
         ) : (
-          <Box className={styles.loclist}>
-            {sortedLocations.length > 0 ? (
-              sortedLocations.slice(0, visibleCount).map((item) => (
+          <Box className={styles.eplist}>
+            {sortedEpisodes.length > 0 ? (
+              sortedEpisodes.slice(0, visibleCount).map((item) => (
                 <Link
                   key={item.id}
-                  to={`/location/${item.id}`}
+                  to={`/episode/${item.id}`}
                   className={styles.cardLink}
                 >
-                  <Card className={styles.cardLocation}>
-                    <CardContent className={styles.cardLocationContent}>
-                      <Box className={styles.cardLocationContentText}>
-                        <Typography className={styles.cardLocationName}>
+                  <Card className={styles.cardEpisode}>
+                    <CardContent className={styles.cardEpisodeContent}>
+                      <Box className={styles.cardEpisodeContentText}>
+                        <Typography className={styles.cardEpisodeName}>
                           {item.name}
                         </Typography>
-                        <Typography className={styles.cardLocationType}>
-                          {item.type}
+                        <Typography className={styles.cardEpisodeAirdate}>
+                          {item.air_date}
+                        </Typography>
+                        <Typography className={styles.cardEpisodeNumber}>
+                          {item.episode}
                         </Typography>
                       </Box>
                     </CardContent>
@@ -134,8 +137,8 @@ function LocationsList() {
         )}
       </Box>
       {status !== "loading" &&
-        sortedLocations.length > 0 &&
-        (hasMore || visibleCount < sortedLocations.length) && (
+        sortedEpisodes.length > 0 &&
+        (hasMore || visibleCount < sortedEpisodes.length) && (
           <Box>
             <CustomLoadButton onClick={handleLoadMore}>
               Load more
@@ -146,4 +149,4 @@ function LocationsList() {
   );
 }
 
-export default LocationsList;
+export default EpisodesList;

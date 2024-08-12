@@ -14,52 +14,52 @@
 }
 
 
-.detailsTop .locationWrapper {
+.detailsTop .episodeWrapper {
     display: block;
     margin: 0 auto;
     width: 60%;
 }
-.locationWrapper .locationName {
+.episodeWrapper .episodeName {
     font-size: 36px;
 }
 
-.locationInfo {
+.episodeInfo {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
-.locationInfoBox {
+.episodeInfoBox {
     display: flex;
     justify-content: space-between;
     gap: 30px;
     margin-bottom: 50px;
 }
-.locationInfoType, .locationInfoDimension {
+.episodeInfoType, .episodeInfoDimension {
     width: 50%;
 }
-.locationInfoType .locationInfoTypeTitle, .locationInfoDimension .locationInfoDimensionTitle {
+.episodeInfoType .episodeInfoTypeTitle, .episodeInfoDimension .episodeInfoDimensionTitle {
     font-weight: 700;
 }
-.locationInfoType .locationInfoTypeText, .locationInfoDimension .locationInfoDimensionText {
+.episodeInfoType .episodeInfoTypeText, .episodeInfoDimension .episodeInfoDimensionText {
     color: rgba(110, 121, 140, 1);
 }
 
-.locationResidents .locationResidentsList {
+.episodeResidents .episodeResidentsList {
     padding: 20px 0 60px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 30px;
 }
-.locationResidents .locationResidentsTitle {
+.episodeResidents .episodeResidentsTitle {
     color: rgba(142, 142, 147, 1);
     font-size: 24px;
 }
-.locationResidents .cardLink {
+.episodeResidents .cardLink {
     text-decoration: none;
 }
-.locationResidentsList .cardCharacter {
+.episodeResidentsList .cardCharacter {
     width: 240px;
     cursor: pointer;
 }
@@ -90,10 +90,10 @@
     .detailsHero {
         margin-top: 40px;
     }
-    .locationInfo .locationName {
+    .episodeInfo .episodeName {
         margin-top: 50px;
     }
-    .locationResidentsList {
+    .episodeResidentsList {
         display: flex;
         flex-direction: column;
         align-items: center;

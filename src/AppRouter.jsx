@@ -3,6 +3,8 @@ import Characters from "./pages/Characters/Characters";
 import Episodes from "./pages/Episodes/Episodes";
 import Locations from "./pages/Locations/Locations";
 import CharacterDetails from "./pages/CharacterDetails/CharacterDetails";
+import LocationDetails from "./pages/LocationDetails/LocationDetails";
+import EpisodeDetails from "./pages/EpisodeDetails/EpisodeDetails";
 
 function AppRouter() {
   return (
@@ -12,6 +14,8 @@ function AppRouter() {
         <Route path="/episodes" element={<Episodes />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/character/:id" element={<CharacterDetails />}></Route>
+        <Route path="/location/:id" element={<LocationDetails />}></Route>
+        <Route path="/episode/:id" element={<EpisodeDetails />}></Route>
       </Routes>
     </Router>
   );

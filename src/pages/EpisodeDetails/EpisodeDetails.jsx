@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectLocations, fetchLocation } from "../../store/locationsSlice";
+import { selectEpisodes, fetchEpisode } from "../../store/episodesSlice";
 import Footer from "../../components/Footer/Footer";
 import Nav from "../../components/Nav/Nav";
 import {
@@ -13,47 +13,47 @@ import {
   CardContent,
   CardMedia,
 } from "@mui/material";
-import styles from "./LocationDetails.module.css";
+import styles from "./EpisodeDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import { Link } from "react-router-dom";
 
-function LocationDetails() {
+function EpisodeDetails() {
   const navigate = useNavigate();
-  const locations = useSelector(selectLocations);
+  const episodes = useSelector(selectEpisodes);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [location, setLocation] = useState("");
-  const [residents, setResidents] = useState([]);
+  const [episode, setEpisode] = useState("");
+  const [cast, setCast] = useState([]);
 
   const handleGoBack = () => {
     navigate(-1);
   };
 
   useEffect(() => {
-    const foundLocation = locations.find((loc) => loc.id === +id);
-    if (foundLocation) {
-      setLocation(foundLocation);
+    const foundEpisode = episodes.find((ep) => ep.id === +id);
+    if (foundEpisode) {
+      setEpisode(foundEpisode);
     } else {
-      dispatch(fetchLocation(id))
+      dispatch(fetchEpisode(id))
         .unwrap()
         .then((data) => {
-          setLocation(data);
+          setEpisode(data);
         });
     }
-  }, [locations]);
+  }, [episodes]);
   useEffect(() => {
-    if (location && location.residents) {
+    if (episode && episode.characters) {
       const fetchAllResidents = async () => {
-        const residentDataPromises = location.residents.map((url) => {
-          return fetch(url).then((response) => response.json());
-        });
-        const residentData = await Promise.all(residentDataPromises);
-        setResidents(residentData);
+        const castDataPromises = episode.characters.map((url) =>
+          fetch(url).then((response) => response.json())
+        );
+        const castData = await Promise.all(castDataPromises);
+        setCast(castData);
       };
 
       fetchAllResidents();
     }
-  }, [location]);
+  }, [episode]);
 
   return (
     <>
@@ -65,38 +65,38 @@ function LocationDetails() {
             Go back
           </Button>
 
-          <Box className={styles.locationWrapper}>
-            <Box className={styles.locationInfo}>
-              <Typography className={styles.locationName}>
-                {location.name}
+          <Box className={styles.episodeWrapper}>
+            <Box className={styles.episodeInfo}>
+              <Typography className={styles.episodeName}>
+                {episode.name}
               </Typography>
-              <Box className={styles.locationInfoBox}>
-                <Box className={styles.locationInfoType}>
-                  <Typography className={styles.locationInfoTypeTitle}>
-                    Type
+              <Box className={styles.episodeInfoBox}>
+                <Box className={styles.episodeInfoType}>
+                  <Typography className={styles.episodeInfoTypeTitle}>
+                    Episode
                   </Typography>
-                  <Typography className={styles.locationInfoTypeText}>
-                    {location.type}
+                  <Typography className={styles.episodeInfoTypeText}>
+                    {episode.episode}
                   </Typography>
                 </Box>
-                <Box className={styles.locationInfoDimension}>
-                  <Typography className={styles.locationInfoDimensionTitle}>
-                    Type
+                <Box className={styles.episodeInfoDimension}>
+                  <Typography className={styles.episodeInfoDimensionTitle}>
+                    Date
                   </Typography>
-                  <Typography className={styles.locationInfoDimensionText}>
-                    {location.dimension}
+                  <Typography className={styles.episodeInfoDimensionText}>
+                    {episode.air_date}
                   </Typography>
                 </Box>
               </Box>
             </Box>
           </Box>
-          <Box className={styles.locationResidents}>
-            <Typography className={styles.locationResidentsTitle}>
-              Residents
+          <Box className={styles.episodeResidents}>
+            <Typography className={styles.episodeResidentsTitle}>
+              Cast
             </Typography>
-            <Box className={styles.locationResidentsList}>
-              {residents.length > 0 ? (
-                residents.map((item) => (
+            <Box className={styles.episodeResidentsList}>
+              {cast.length > 0 ? (
+                cast.map((item) => (
                   <Link
                     key={item.id}
                     to={`/character/${item.id}`}
@@ -123,7 +123,7 @@ function LocationDetails() {
                   </Link>
                 ))
               ) : (
-                <Typography>No residents found</Typography>
+                <Typography>No cast</Typography>
               )}
             </Box>
           </Box>
@@ -134,4 +134,4 @@ function LocationDetails() {
   );
 }
 
-export default LocationDetails;
+export default EpisodeDetails;

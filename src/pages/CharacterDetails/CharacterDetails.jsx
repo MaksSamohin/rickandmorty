@@ -5,27 +5,47 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import styles from "./CharacterDetails.module.css";
 import arrow from "../../assets/icons/arrow.svg";
 import grayArrow from "../../assets/icons/grayArrow.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchCharacter, selectCharacters } from "../../store/charactersSlice";
 import Footer from "../../components/Footer/Footer";
 function CharacterDetails() {
   const [character, setCharacter] = useState("");
+  const [episodes, setEpisodes] = useState("");
+  const dispatch = useDispatch();
   const characters = useSelector(selectCharacters);
   const navigate = useNavigate();
   const { id } = useParams();
   const handleGoBack = () => {
     navigate(-1);
   };
-
+  const locationId = character.location
+    ? character.location.url.split("/").pop()
+    : "";
   useEffect(() => {
     const foundCharacter = characters.find((char) => char.id === +id);
     if (foundCharacter) {
       setCharacter(foundCharacter);
     } else {
-      fetchCharacter(id).then((data) => setCharacter(data));
+      dispatch(fetchCharacter(id))
+        .unwrap()
+        .then((data) => {
+          setCharacter(data);
+        });
     }
   }, [characters]);
-  console.log(character);
+  useEffect(() => {
+    if (character && character.episode) {
+      const fetchAllEpisodes = async () => {
+        const episodesDataPromises = character.episode.map((url) =>
+          fetch(url).then((response) => response.json())
+        );
+        const episodeData = await Promise.all(episodesDataPromises);
+        setEpisodes(episodeData);
+      };
+      fetchAllEpisodes();
+    }
+  }, [character]);
+
   return (
     <>
       <Nav />
@@ -95,7 +115,7 @@ function CharacterDetails() {
                 </Box>
                 <Box className={styles.characterInfoInformationsColumnItem}>
                   <Typography
-                    className={styles.characterInfoInformationsItemitle}
+                    className={styles.characterInfoInformationsItemTitle}
                   >
                     Type
                   </Typography>
@@ -106,18 +126,25 @@ function CharacterDetails() {
                   </Typography>
                 </Box>
                 <Box className={styles.characterInfoInformationsColumnItem}>
-                  <Link to="/">
+                  <Link
+                    to={`/location/${locationId}`}
+                    className={styles.locationLink}
+                  >
                     <Typography
                       className={styles.characterInfoInformationsItemTitle}
                     >
-                      Type
+                      Location
                     </Typography>
                     <Typography
                       className={styles.characterInfoInformationsItemText}
                     >
                       {character.location ? character.location.name : "Unknown"}
                     </Typography>
-                    <img src={grayArrow} alt="" />
+                    <img
+                      src={grayArrow}
+                      alt="arrow"
+                      className={styles.locationArrowLink}
+                    />
                   </Link>
                 </Box>
               </Box>
@@ -127,11 +154,43 @@ function CharacterDetails() {
                 Episodes
               </Typography>
               <Box className={styles.characterInfoEpisodesList}>
-                {/* {character.episode
-                ? character.episode.map((item, index) => {
-                    return <Typography>{index}</Typography>;
-                  })
-                : "No episodes"} */}
+                {episodes
+                  ? episodes.map((item, index) => {
+                      return (
+                        <>
+                          <Link
+                            key={index}
+                            to={`/episode/${item.id}`}
+                            className={styles.characterInfoEpisodesLink}
+                          >
+                            <Box className={styles.characterEpisode}>
+                              <Typography
+                                className={styles.characterEpisodeNumber}
+                              >
+                                {item.episode}
+                              </Typography>
+                              <Typography
+                                className={styles.characterEpisodeName}
+                              >
+                                {item.name}
+                              </Typography>
+                              <Typography
+                                className={styles.characterEpisodeAirdate}
+                              >
+                                {item.air_date}
+                              </Typography>
+                              <img
+                                src={grayArrow}
+                                alt="arrow"
+                                className={styles.episodeArrowLink}
+                              />
+                            </Box>
+                          </Link>
+                          <hr className={styles.characterLine}></hr>
+                        </>
+                      );
+                    })
+                  : "No episodes"}
               </Box>
             </Box>
           </Box>
