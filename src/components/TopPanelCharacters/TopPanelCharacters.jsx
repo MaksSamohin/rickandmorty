@@ -21,6 +21,7 @@ import {
   selectAvailableFilters,
 } from "../../store/charactersSlice";
 import { useEffect, useState } from "react";
+import useCheckMobileScreen from "../../hooks/useCheckMobileScreen.hook";
 
 function TopPanelCharacters() {
   const dispatch = useDispatch();
@@ -28,7 +29,6 @@ function TopPanelCharacters() {
   const availableFilters = useSelector(selectAvailableFilters);
   const [openModal, setOpenModal] = useState(false);
   const [tempFilters, setTempFilters] = useState(filters);
-
   useEffect(() => {
     if (filters) {
       dispatch(fetchCharacters({ filters }));
@@ -66,7 +66,11 @@ function TopPanelCharacters() {
       <img src={picture} alt="" className={styles.hero} />
       <Box className={styles.filters}>
         <Input
-          onChange={(e) => handleChangeTemp("name", e.target.value)}
+          onChange={
+            useCheckMobileScreen()
+              ? (e) => handleChangeTemp("name", e.target.value)
+              : (e) => handleChange("name", e.target.value)
+          }
           value={filters.name}
           type="text"
           name="name"

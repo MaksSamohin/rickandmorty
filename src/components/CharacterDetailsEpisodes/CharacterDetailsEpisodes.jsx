@@ -17,7 +17,13 @@ function CharacterDetailsEpisodes({ character }) {
 
       dispatch(fetchEpisode(id))
         .unwrap()
-        .then((data) => setEpisodes(data));
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setEpisodes(data);
+          } else {
+            setEpisodes([data]);
+          }
+        });
     }
   }, [character]);
 
