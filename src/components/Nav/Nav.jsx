@@ -2,14 +2,7 @@ import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import logo from "../../assets/icons/logo-black1.svg";
 import { Link } from "react-router-dom";
-import {
-  Box,
-  AppBar,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import { Box, AppBar, Drawer, List, ListItem } from "@mui/material";
 import styles from "./Nav.module.css";
 import { styled } from "@mui/material";
 

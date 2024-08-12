@@ -34,20 +34,7 @@
     font-size: 20px;
     text-decoration: inherit;
 }
-.loadingImg {
-    display: block;
-    margin: 0 auto;
-    animation: loading 5s infinite;
-}
 
-@keyframes loading {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
 
 @media screen and (max-width: 768px) {
     .charlist {
